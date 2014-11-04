@@ -29,6 +29,10 @@ public class MainActivity extends Activity {
 			//Start map activity
 			Intent intent = new Intent(this, MapActivity.class);
 			startActivity(intent);
+		} else if (id == R.id.action_locations) {
+			//Start locations
+			Intent intent = new Intent(this, ShowLocationActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
