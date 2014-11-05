@@ -35,6 +35,9 @@ public class MainActivity extends Activity {
 		} else if (id == R.id.action_new_location) {
 			Intent intent = new Intent(this, NewLocationActivity.class);
 			startActivity(intent);
+		} else if (id == R.id.action_login) {
+			Intent intent = new Intent(this, LogInActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
