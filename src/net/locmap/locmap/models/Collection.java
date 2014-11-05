@@ -3,11 +3,17 @@ package net.locmap.locmap.models;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * @author Juuso Hatakka
+ * @author Janne Heikkinen
+ * 
+ * Collection is a set of locations
+ */
 public class Collection {
 	private String id;
 	private String title;
 	private String description;
-	private ArrayList<String> locations;
+	private ArrayList<Location> locations;
 	private Date updated;
 	private Date created;
 	
@@ -15,18 +21,38 @@ public class Collection {
 		this.id = "";
 		this.title = "";
 		this.description = "";
-		this.locations = new ArrayList<String>();
+		this.locations = new ArrayList<Location>();
 		this.created = new Date();
 		this.updated = new Date();
 	}
 	
-	public Collection(String id, String title, String description, ArrayList<String> locations, Date updated, Date created) {
+	public Collection(String id, String title, String description, ArrayList<Location> locations, Date updated, Date created) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.locations = locations;
 		this.updated = updated;
 		this.created = created;
+	}
+	
+	
+	/** Deletes location with given ID from the collection. Doesn't delete the location
+	 * @param locationId ID of the location to be deleted
+	 */
+	public void deleteLocation(String locationId) {
+		for (int i = 0; i < locations.size(); ++i) {
+			if (locations.get(i).getId().equals(locationId)) 
+				locations.remove(i);
+		}
+	}
+	
+	
+	/**
+	 * Adds Location to collection datastructure
+	 * @param loc location to be added
+	 */
+	public void addLocation(Location loc) {
+		locations.add(loc);
 	}
 	
 	public String getId() {
@@ -53,11 +79,11 @@ public class Collection {
 		this.description = description;
 	}
 
-	public ArrayList<String> getLocations() {
+	public ArrayList<Location> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(ArrayList<String> locations) {
+	public void setLocations(ArrayList<Location> locations) {
 		this.locations = locations;
 	}
 
