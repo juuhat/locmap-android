@@ -3,6 +3,10 @@ package net.locmap.locmap.models;
 import java.util.ArrayList;
 import java.util.Date;
 
+/** 
+ * Location class to save coordinates, title, info and images about a certain location
+ * @author Juuso Hatakka
+ */
 public class Location {
 	private String id;
 	private String title;
