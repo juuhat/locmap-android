@@ -44,11 +44,6 @@
                     android:layout_height="200dp"
                     android:src="@drawable/ic_launcher" />
                 
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:src="@drawable/common_ic_googleplayservices" />
                 
             </LinearLayout>
         </HorizontalScrollView>
