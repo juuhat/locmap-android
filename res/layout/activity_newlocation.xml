@@ -23,6 +23,7 @@
 
         <EditText
             android:id="@+id/editDescription"
+            android:gravity="top"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
             android:inputType="textMultiLine"
@@ -96,14 +97,15 @@
                 android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="2dp"
+                android:padding="10dp"
                 android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
+                android:layout_marginLeft="50dp"
                 android:layout_height="wrap_content"
-                android:padding="2dp"
+                android:padding="10dp"
                 android:text="@string/save" />
         </LinearLayout>
     </LinearLayout>

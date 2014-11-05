@@ -9,7 +9,7 @@
     <string name="action_map">Map</string>
     <string name="action_locations">Locations</string>
     <string name="title_activity_show_location">ShowLocationActivity</string>
-    <string name="title_activity_location">LocationActivity</string>
+    <string name="title_activity_location">New location</string>
     
     <!-- New Location Activity -->
     <string name="getCoordinates">Get coordinates</string>

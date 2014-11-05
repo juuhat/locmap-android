@@ -25,5 +25,11 @@
         android:orderInCategory="3"
         android:showAsAction="never"
         android:title="@string/action_locations"/>
-
+    
+    <item
+        android:id="@+id/action_new_location"
+        android:orderInCategory="4"
+        android:showAsAction="never"
+        android:title="@string/title_activity_location"/>
+    
 </menu>

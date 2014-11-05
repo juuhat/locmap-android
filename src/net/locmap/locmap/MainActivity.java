@@ -24,8 +24,6 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {	
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			Intent intent = new Intent(this, NewLocationActivity.class);
-			startActivity(intent);
 		} else if (id == R.id.action_map) {
 			//Start map activity
 			Intent intent = new Intent(this, MapActivity.class);
@@ -33,6 +31,9 @@ public class MainActivity extends Activity {
 		} else if (id == R.id.action_locations) {
 			//Start locations
 			Intent intent = new Intent(this, ShowLocationActivity.class);
+			startActivity(intent);
+		} else if (id == R.id.action_new_location) {
+			Intent intent = new Intent(this, NewLocationActivity.class);
 			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
