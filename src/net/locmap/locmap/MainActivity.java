@@ -24,7 +24,8 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {	
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			return true;
+			Intent intent = new Intent(this, NewLocationActivity.class);
+			startActivity(intent);
 		} else if (id == R.id.action_map) {
 			//Start map activity
 			Intent intent = new Intent(this, MapActivity.class);
