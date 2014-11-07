@@ -16,13 +16,13 @@
         <!-- Textfields for creating new location -->
 
         <EditText
-            android:id="@+id/editTitle"
+            android:id="@+id/editNewLocationTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title" />
 
         <EditText
-            android:id="@+id/editDescription"
+            android:id="@+id/editNewLocationDescription"
             android:gravity="top"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
@@ -43,25 +43,26 @@
                 android:orientation="vertical" >
 
                 <EditText
-                    android:id="@+id/editLatitude"
+                    android:id="@+id/editNewLocationLatitude"
                     android:hint="@string/latitude"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
 
                 <EditText
-                    android:id="@+id/editLongitude"
+                    android:id="@+id/editNewLocationLongitude"
                     android:hint="@string/longitude"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/btnCoordinates"
+                android:id="@+id/btnNewLocationCoordinates"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_gravity="center|right"
                 android:layout_margin="4dp"
                 android:contentDescription="@string/getCoordinates"
+                android:onClick="btnNewLocationCoordinatesClicked"
                 android:src="@android:drawable/ic_menu_compass" />
         </LinearLayout>
 
@@ -73,7 +74,7 @@
             android:orientation="horizontal" >
 
             <ImageButton
-                android:id="@+id/btnCamera"
+                android:id="@+id/btnNewLocationCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -82,7 +83,7 @@
                 android:src="@android:drawable/ic_menu_camera" />
 
             <ImageView
-                android:id="@+id/imgPreview"
+                android:id="@+id/imgNewLocationPreview"
                 android:layout_width="120dp"
                 android:layout_height="100dp"
                 android:layout_gravity="right"
@@ -96,14 +97,14 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/btnCancel"
+                android:id="@+id/btnNewLocationCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@string/cancel" />
 
             <Button
-                android:id="@+id/btnSave"
+                android:id="@+id/btnNewLocationSave"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_height="wrap_content"
