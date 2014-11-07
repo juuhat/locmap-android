@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="net.locmap.locmap.LogInActivity" >
+    tools:context="net.locmap.locmap.registerActivity" >
 
     <!-- Basic layout -->
 
@@ -15,6 +15,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
+
+        <!-- Email -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"
+                android:text="@string/email" />
+
+            <EditText
+                android:id="@+id/editRegisterEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" >
+
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
 
         <!-- Username -->
 
@@ -29,10 +52,10 @@
                 android:text="@string/user" />
 
             <EditText
-                android:id="@+id/editLogInUser"
-                android:hint="@string/username"
+                android:id="@+id/editRegisterUser"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:hint="@string/username" >
 
                 <requestFocus />
             </EditText>
@@ -51,44 +74,41 @@
                 android:text="@string/password" />
 
             <EditText
-                android:id="@+id/editLogInPassword"
+                android:id="@+id/editRegisterPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword" >
             </EditText>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="85dp"
+                android:layout_height="48dp"
+                android:text="@string/password_conf" />
+
+            <EditText
+                android:id="@+id/editRegisterPasswordConfirmation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:inputType="textPassword" >
+            </EditText>
+        </LinearLayout>
+
         <Button
-            android:id="@+id/btnLogIn"
+            android:id="@+id/btnRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:padding="4dp"
-            android:text="@string/title_activity_log_in" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notMember" />
-            
-            <TextView
-                android:id="@+id/txtLogInRegister"
-                android:layout_marginLeft="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#0000FF"
-                android:clickable="true"
-                android:onClick="onRegisterClick"
-                android:text="@string/register" />
-            
-        </LinearLayout>
+            android:paddingRight="8dp" android:paddingLeft="8dp"
+            android:text="@string/title_activity_register" />
     </LinearLayout>
 
 </ScrollView>
