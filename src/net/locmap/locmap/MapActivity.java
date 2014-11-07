@@ -2,45 +2,40 @@ package net.locmap.locmap;
 
 import android.app.Activity;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Debug;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapActivity extends Activity {
+public class MapActivity extends Activity implements
+	GoogleApiClient.ConnectionCallbacks,
+	GoogleApiClient.OnConnectionFailedListener,
+	LocationListener {
 
     private GoogleMap myMap;
     //private ArrayList<Marker> markers;
-    private LocationManager mLocationManager;
+    private GoogleApiClient googleApiClient;
+    private FusedLocationProviderApi locationProvider;
+    private LocationRequest locationRequest;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 		
-		initGPS();
-		
-		// Getting Google Play availability status
+		// Check Google Play availability status
 		if (serviceAvailable()) {
+			initGPS();
 			initMap();
 		}
 	}
@@ -58,49 +53,59 @@ public class MapActivity extends Activity {
 	}
 	
 	private void initGPS() {
-		mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		long time = 10000; //update frequency in milliseconds
-		float dist = 3; //update minimum distance in meters
-	    mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, dist, mLocationListener);
+        googleApiClient = new GoogleApiClient.Builder(this)
+        .addApi(LocationServices.API)
+        .addConnectionCallbacks(this)
+        .addOnConnectionFailedListener(this)
+        .build();
+		
+        googleApiClient.connect();
+        
 	}
 	
 	private void initMap() {
 		// find map fragment
 		myMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-		
+
 		// show device location
         myMap.setMyLocationEnabled(true);
 
 		// set map type
 		myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		
-		// move camera to last known position
-		Location lastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+        locationProvider = LocationServices.FusedLocationApi;
+        Location lastLocation = locationProvider.getLastLocation(googleApiClient);
+
 		if (lastLocation != null) {
 			myMap.moveCamera(CameraUpdateFactory.newLatLngZoom
 					(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), 14));
 		}
 		
+		//Set up continuous location updates
+		/*locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(1000); //milliseconds
+        locationProvider.requestLocationUpdates(googleApiClient, locationRequest, this);*/
+		
 	}
-	
-	private final LocationListener mLocationListener = new LocationListener() {
-		@Override
-		public void onLocationChanged(Location location) {
-			myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 14));
-		}
 
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
-	};
+	@Override
+	public void onConnectionSuspended(int arg0) {
+		// TODO Auto-generated method stub
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
