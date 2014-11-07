@@ -9,6 +9,7 @@
     <string name="action_map">Map</string>
     <string name="action_locations">Locations</string>
     <string name="title_activity_show_location">ShowLocationActivity</string>
+    <string name="title_activity_register">Register</string>
     
     <!-- New Location Activity -->
     <string name="title_activity_location">New location</string>
@@ -19,13 +20,16 @@
     <string name="takePicture">Take a picture with camera</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
     
+
     <!-- Log in Activity -->
     <string name="title_activity_log_in">Log in</string>
-	<string name="user">User</string>
-	<string name="password">Password</string>
-	<string name="notMember">Not a member?</string>
-	<string name="register">Register!</string>
-	
-	
+    <string name="user">User</string>
+    <string name="password">Password</string>
+    <string name="notMember">Not a member?</string>
+    <string name="register"><u>Register!</u></string>
+    
+
 </resources>
