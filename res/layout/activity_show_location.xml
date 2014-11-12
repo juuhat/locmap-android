@@ -12,7 +12,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/textViewTitle"
+            android:id="@+id/txtShowLocationTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
@@ -20,7 +20,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
         
         <TextView
-            android:id="@+id/textViewDescription"
+            android:id="@+id/txtShowLocationDescription"
             android:paddingTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <HorizontalScrollView
-            android:id="@+id/horizontalScrollView1"
+            android:id="@+id/scrollShowLocationImages"
             android:paddingTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
