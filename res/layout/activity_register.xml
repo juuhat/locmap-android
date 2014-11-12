@@ -107,8 +107,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:paddingRight="8dp" android:paddingLeft="8dp"
+            android:onClick="btnRegister"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:text="@string/title_activity_register" />
+
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtRegisterResult" 
+            />
     </LinearLayout>
 
 </ScrollView>
