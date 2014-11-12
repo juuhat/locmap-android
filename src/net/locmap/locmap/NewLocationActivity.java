@@ -8,12 +8,16 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 public class NewLocationActivity extends Activity implements
 	GoogleApiClient.ConnectionCallbacks,
@@ -44,6 +48,24 @@ public class NewLocationActivity extends Activity implements
 			longitude.setText(Double.toString(currentLocation.getLongitude()));
 		}
 		
+	}
+	
+	public void btnNewLocationCamera(View view) {
+		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+			startActivityForResult(takePictureIntent, 1);
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == 1 && resultCode == RESULT_OK) {
+	        Bundle extras = data.getExtras();
+	        Bitmap imageBitmap = (Bitmap) extras.get("data");
+	        ImageView imgView = (ImageView) findViewById(R.id.imgNewLocationPreview);
+	        imgView.setImageBitmap(imageBitmap);
+	    }
+
 	}
 	
 	private void initGPS() {

@@ -80,6 +80,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
                 android:contentDescription="@string/takePicture"
+                android:onClick="btnNewLocationCamera"
                 android:src="@android:drawable/ic_menu_camera" />
 
             <ImageView
