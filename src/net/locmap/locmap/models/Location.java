@@ -11,8 +11,8 @@ public class Location {
 	private String id;
 	private String title;
 	private String description;
-	private Float latitude;
-	private Float longitude;
+	private float latitude;
+	private float longitude;
 	private ArrayList<String> images;
 	private Date updated;
 	private Date created;
