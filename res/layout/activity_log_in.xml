@@ -26,11 +26,11 @@
             <TextView
                 android:layout_width="85dp"
                 android:layout_height="wrap_content"
-                android:text="@string/user" />
+                android:text="@string/email" />
 
             <EditText
                 android:id="@+id/editLogInUser"
-                android:hint="@string/username"
+                android:inputType="textEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
@@ -65,6 +65,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:padding="4dp"
+            android:onClick="btnLogIn"
             android:text="@string/title_activity_log_in" />
 
         <LinearLayout
@@ -89,6 +90,12 @@
                 android:text="@string/register" />
             
         </LinearLayout>
+        
+        <TextView 
+            android:id="@+id/txtLogInResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
 </ScrollView>

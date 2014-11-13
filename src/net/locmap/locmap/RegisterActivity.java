@@ -62,6 +62,10 @@ public class RegisterActivity extends Activity {
      */
 	public class Register extends AsyncTask<String, Void, String> {
 
+		/**
+		 * Converts String data to JSON
+		 * Calls Network.Post for registering
+		 */
 		@Override
 		protected String doInBackground(String... params) {
 			if (params.length < 3)
@@ -82,8 +86,12 @@ public class RegisterActivity extends Activity {
 			return Network.Post(Network.registerUrl, json);
 		}
 		
+		/**
+		 * Updates UI after response has arrived from API
+		 */
 		@Override
 		protected void onPostExecute(String result) {
+			// TODO: Something clever when register fails/succeeds
 			TextView registerResult = (TextView) findViewById(R.id.txtRegisterResult);
 			registerResult.setText(result);
 		}

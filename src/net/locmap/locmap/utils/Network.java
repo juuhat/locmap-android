@@ -22,6 +22,8 @@ public class Network {
 
 	public final static String base = "http://api.locmap.net/v1/";
 	public final static String registerUrl = base + "auth/register";
+	public final static String loginUrl = base + "auth/login";
+	
 	
 	/**
 	 * Sends HTTP POST request, returns the response
@@ -36,6 +38,7 @@ public class Network {
 	
 	/** 
 	 * Sends HTTP POST request, returns the response
+	 * TODO: Returns only response as string, should return also access token!
 	 * @param url where to send post request
 	 * @param json data to send
 	 * @param token Authentication key
