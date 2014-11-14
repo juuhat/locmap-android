@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import net.locmap.locmap.utils.Network;
+import net.locmap.locmap.utils.Response;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,16 +61,16 @@ public class RegisterActivity extends Activity {
      * 2. parameter: Username
      * 3. parameter: Password
      */
-	public class Register extends AsyncTask<String, Void, String> {
+	public class Register extends AsyncTask<String, Void, Response> {
 
 		/**
 		 * Converts String data to JSON
 		 * Calls Network.Post for registering
 		 */
 		@Override
-		protected String doInBackground(String... params) {
+		protected Response doInBackground(String... params) {
 			if (params.length < 3)
-				return "";
+				this.cancel(true);
 			
 			String json = "";
 			JSONObject jsonObj = new JSONObject();
@@ -90,10 +91,10 @@ public class RegisterActivity extends Activity {
 		 * Updates UI after response has arrived from API
 		 */
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(Response res) {
 			// TODO: Something clever when register fails/succeeds
 			TextView registerResult = (TextView) findViewById(R.id.txtRegisterResult);
-			registerResult.setText(result);
+			registerResult.setText(res.getBody());
 		}
 		
 	}

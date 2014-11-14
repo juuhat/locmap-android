@@ -23,6 +23,7 @@ public class Network {
 	public final static String base = "http://api.locmap.net/v1/";
 	public final static String registerUrl = base + "auth/register";
 	public final static String loginUrl = base + "auth/login";
+	public final static String locationsUrl = base + "locations";
 	
 	
 	/**
@@ -31,7 +32,7 @@ public class Network {
 	 * @param json data to send
 	 * @return response
 	 */
-	public static String Post(String url, String json) {
+	public static Response Post(String url, String json) {
 		return Post(url, json, "");
 	}
 	
@@ -44,8 +45,8 @@ public class Network {
 	 * @param token Authentication key
 	 * @return Response
 	 */
-	public static String Post(String url, String json, String token) {
-		String result = "";
+	public static Response Post(String url, String json, String token) {
+		Response res = new Response();
 		InputStream inputstream = null;
 		StringEntity se;
 		try {
@@ -58,13 +59,15 @@ public class Network {
 	        post.setHeader("Authorization", "Bearer " + token);
 
 			HttpResponse response = client.execute(post);
-			
+
+			String body = "";
 			inputstream = response.getEntity().getContent();
-			
 			if (inputstream != null)
-				result = convertInputStreamToString(inputstream);
-			else
-				result = "";
+				body = convertInputStreamToString(inputstream);
+			
+			res.setHeaders(response.getAllHeaders());
+			res.setStatusCode(response.getStatusLine().getStatusCode());
+			res.setBody(body);
 			
 		} catch (ClientProtocolException e) {
 			Log.d("ClientProtocolException", e.getMessage());
@@ -72,7 +75,7 @@ public class Network {
 			Log.d("IOException: ", e.getMessage());
 		}
 		
-		return result;
+		return res;
 	}
 	
 	

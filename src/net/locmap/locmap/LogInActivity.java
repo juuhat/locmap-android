@@ -1,12 +1,15 @@
 package net.locmap.locmap;
 
 import net.locmap.locmap.utils.Network;
+import net.locmap.locmap.utils.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,6 +73,17 @@ public class LogInActivity extends Activity {
 		new LogIn().execute(params);
 	}
 	
+	/**
+	 * Saves token in SharedPreferences
+	 * @param token
+	 */
+	private void saveToken(String token) {
+		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putString("token", token);
+		editor.commit();
+	}
+	
 	
 	/**
 	 * Sends LogIn request to API.
@@ -78,17 +92,17 @@ public class LogInActivity extends Activity {
 	 *  1. parameter: Username
 	 *  2. parameter: Password
 	 */
-	public class LogIn extends AsyncTask<String, Void, String> {
+	public class LogIn extends AsyncTask<String, Void, Response> {
 
 		/**
 		 * Converts string data to JSON and calls Network.Post
 		 * Returns HTTP response content as string
 		 */
 		@Override
-		protected String doInBackground(String... params) {
+		protected Response doInBackground(String... params) {
 			if (params.length < 2) 
-				return "";
-			
+				this.cancel(true);
+
 			String json = "";
 			JSONObject jsonObj = new JSONObject();
 			try {
@@ -98,18 +112,25 @@ public class LogInActivity extends Activity {
 			} catch (JSONException ex) {
 				Log.d("JSON Convert", "String to JSON fail @ login");
 			}
-			if (json != "")
-				return Network.Post(Network.loginUrl, json);
-			return "Error while logging in";
+			
+			return Network.Post(Network.loginUrl, json);
+
 		}
 		
 		/**
 		 * TODO: Parse access token, do something clever
 		 */
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(Response res) {
+			
 			TextView resultView = (TextView) findViewById(R.id.txtLogInResult);
-			resultView.setText(result);
+			resultView.setText(res.getHeader("x-access-token"));
+			
+			String token = res.getHeader("x-access-token");
+			if (token != null) {
+				saveToken(token);
+			}
+			
 		}
 	}
 	

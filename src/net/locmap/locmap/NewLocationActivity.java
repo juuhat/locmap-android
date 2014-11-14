@@ -1,6 +1,7 @@
 package net.locmap.locmap;
 
 import net.locmap.locmap.utils.Network;
+import net.locmap.locmap.utils.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -208,16 +209,16 @@ public class NewLocationActivity extends Activity implements
 	 * 3. paramater: Latitude
 	 * 4. parameter: Longitude
 	 */
-	public class CreateLocation extends AsyncTask<String, Void, String> {
+	public class CreateLocation extends AsyncTask<String, Void, Response> {
 
 		/**
 		 * Converts String data to JSON
 		 * Calls Network.Post for creating new location
 		 */
 		@Override
-		protected String doInBackground(String... params) {
+		protected Response doInBackground(String... params) {
 			if (params.length < 4)
-				return "";
+				this.cancel(true);
 			
 			String json = "";
 			JSONObject jsonObj = new JSONObject();
@@ -239,7 +240,7 @@ public class NewLocationActivity extends Activity implements
 		 * 
 		 */
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(Response res) {
 			//TODO upload pictures
 			
 			//TODO set location data
