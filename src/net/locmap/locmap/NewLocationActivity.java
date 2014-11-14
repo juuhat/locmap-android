@@ -1,5 +1,10 @@
 package net.locmap.locmap;
 
+import net.locmap.locmap.utils.Network;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -11,13 +16,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+/**
+ * Activity for creating new locations
+ * @author Juuso Hatakka
+ */
 
 public class NewLocationActivity extends Activity implements
 	GoogleApiClient.ConnectionCallbacks,
@@ -34,10 +46,23 @@ public class NewLocationActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_newlocation);
 		
-		initGPS();
+		//build googleApiClient with locationServices
+        googleApiClient = new GoogleApiClient.Builder(this)
+        .addApi(LocationServices.API)
+        .addConnectionCallbacks(this)
+        .addOnConnectionFailedListener(this)
+        .build();
+		
+        googleApiClient.connect();
 		
 	}
 	
+	
+	/**
+	 * Click event for coordinates button
+	 * Sets latitude and longitude fields to most recent values
+	 * @param view
+	 */
 	public void btnNewLocationCoordinatesClicked(View view) {
 		
 		EditText latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
@@ -50,6 +75,11 @@ public class NewLocationActivity extends Activity implements
 		
 	}
 	
+	
+	/**
+	 * Click event for camera. Sends intent to capture image
+	 * @param view
+	 */
 	public void btnNewLocationCamera(View view) {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -57,6 +87,28 @@ public class NewLocationActivity extends Activity implements
 		}
 	}
 	
+	
+	/**
+	 * Click event for creating location.
+	 * Gets parameters from EditText fields and creates request to API
+	 * @param view
+	 */
+	public void btnNewLocationCreate(View view) {
+		EditText title = (EditText) findViewById(R.id.editNewLocationTitle);
+		EditText description = (EditText) findViewById(R.id.editNewLocationDescription);
+		EditText latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
+		EditText longitude = (EditText) findViewById(R.id.editNewLocationLongitude);
+		
+		String[] params = {title.getText().toString(), description.getText().toString(),
+							latitude.getText().toString(), longitude.getText().toString()};
+		
+		new CreateLocation().execute(params);
+	}
+	
+	
+	/**
+	 * Called automatically when camera returns results
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == 1 && resultCode == RESULT_OK) {
@@ -68,17 +120,10 @@ public class NewLocationActivity extends Activity implements
 
 	}
 	
-	private void initGPS() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-        .addApi(LocationServices.API)
-        .addConnectionCallbacks(this)
-        .addOnConnectionFailedListener(this)
-        .build();
-		
-        googleApiClient.connect();
-        
-	}
-
+	
+	/**
+	 * Called by locationListener when new location is available
+	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		if (location != null) {
@@ -86,11 +131,10 @@ public class NewLocationActivity extends Activity implements
 		}
 	}
 
-	@Override
-	public void onConnectionFailed(ConnectionResult arg0) {
-		// TODO Auto-generated method stub
-	}
-
+	
+	/**
+	 * Called when googleApiClient is ready
+	 */
 	@Override
 	public void onConnected(Bundle bundle) {
 		 locationProvider = LocationServices.FusedLocationApi;
@@ -107,11 +151,22 @@ public class NewLocationActivity extends Activity implements
 		 locationProvider.requestLocationUpdates(googleApiClient, locationRequest, this);
 		 
 	}
+	
+
+	/**
+	 * Called if googleApiClient connection fails
+	 */
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+	}
+	
 
 	@Override
 	public void onConnectionSuspended(int arg0) {
 		// TODO Auto-generated method stub
 	}
+	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,6 +175,7 @@ public class NewLocationActivity extends Activity implements
 		return true;
 	}
 
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -130,6 +186,67 @@ public class NewLocationActivity extends Activity implements
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	
+	/**
+	 * Starts showLocation activity with given location
+	 * @param location
+	 */
+	private void startShowLocationActivity(net.locmap.locmap.models.Location location) {
+		Intent intent = new Intent(this, ShowLocationActivity.class);
+		startActivity(intent);
+	}
+	
+	
+	/**
+	 * Async task for creating location
+	 * Needs four parameters:
+	 * 
+	 * 1. parameter: Title
+	 * 2. parameter: Description
+	 * 3. paramater: Latitude
+	 * 4. parameter: Longitude
+	 */
+	public class CreateLocation extends AsyncTask<String, Void, String> {
+
+		/**
+		 * Converts String data to JSON
+		 * Calls Network.Post for creating new location
+		 */
+		@Override
+		protected String doInBackground(String... params) {
+			if (params.length < 4)
+				return "";
+			
+			String json = "";
+			JSONObject jsonObj = new JSONObject();
+
+			try {
+				jsonObj.accumulate("title", params[0]);
+				jsonObj.accumulate("description", params[1]);
+				jsonObj.accumulate("latitude", params[2]);
+				jsonObj.accumulate("longitude", params[3]);
+				json = jsonObj.toString();
+			} catch (JSONException e) {
+				Log.d("JSON convert", "String to JSON fail @ createLocation");
+			}
+			
+			return Network.Post(Network.locationsUrl, json);
+		}
+		
+		/**
+		 * 
+		 */
+		@Override
+		protected void onPostExecute(String result) {
+			//TODO upload pictures
+			
+			//TODO set location data
+			net.locmap.locmap.models.Location newLocation = new net.locmap.locmap.models.Location();
+			startShowLocationActivity(newLocation);
+		}
+		
 	}
 
 }
