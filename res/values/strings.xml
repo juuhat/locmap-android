@@ -19,7 +19,7 @@
     <string name="desc">Description</string>
     <string name="preview">Preview</string>
     <string name="takePicture">Take a picture with camera</string>
-    <string name="save">Save</string>
+    <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
