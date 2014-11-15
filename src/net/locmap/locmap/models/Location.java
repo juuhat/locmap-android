@@ -3,11 +3,20 @@ package net.locmap.locmap.models;
 import java.util.ArrayList;
 import java.util.Date;
 
-/** 
- * Location class to save coordinates, title, info and images about a certain location
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
+/**
+ * Location class to save coordinates, title, info and images about a certain
+ * location
+ * 
  * @author Juuso Hatakka
  */
-public class Location {
+public class Location implements Parcelable {
 	private String id;
 	private String title;
 	private String description;
@@ -16,7 +25,7 @@ public class Location {
 	private ArrayList<String> images;
 	private Date updated;
 	private Date created;
-	
+
 	public Location() {
 		this.id = "";
 		this.title = "";
@@ -27,8 +36,10 @@ public class Location {
 		this.created = new Date();
 		this.updated = new Date();
 	}
-	
-	public Location(String id, String title, String description, Float latitude, Float longitude, ArrayList<String> images, Date updated, Date created) {
+
+	public Location(String id, String title, String description,
+			float latitude, float longitude, ArrayList<String> images,
+			Date updated, Date created) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -39,14 +50,38 @@ public class Location {
 		this.created = created;
 	}
 	
+	/**
+	 * Constructor using JSON String
+	 * @param json
+	 */
+	public Location(String json) {
+		try {
+			JSONObject jsonObj = new JSONObject(json);
+			Log.e("json", json);
+			this.id = jsonObj.getString("_id");
+			this.title = jsonObj.getString("title");
+			this.description = jsonObj.getString("description");
+			this.latitude = (float) jsonObj.getDouble("latitude");
+			this.longitude = (float) jsonObj.getDouble("longitude");
+			
+			//TODO get values from json
+			this.images = new ArrayList<String>();
+			this.created = new Date();
+			this.updated = new Date();
+			
+		} catch (JSONException e) {
+			Log.e("e", e.toString());
+		}
+	}
+
 	public String getId() {
 		return this.id;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -56,6 +91,7 @@ public class Location {
 	}
 
 	public String getDescription() {
+
 		return description;
 	}
 
@@ -78,11 +114,11 @@ public class Location {
 	public void setFloat(Float longitude) {
 		this.longitude = longitude;
 	}
-	
+
 	public void setImages(ArrayList<String> images) {
 		this.images = images;
 	}
-	
+
 	public ArrayList<String> getImages() {
 		return this.images;
 	}
@@ -103,4 +139,49 @@ public class Location {
 		this.updated = updated;
 	}
 	
+	
+	/**
+	 * Constructor using Parcel data
+	 * @param in
+	 */
+	public Location(Parcel in) {
+		this.id = in.readString();
+		this.title = in.readString();
+		this.description = in.readString();
+		this.latitude = in.readFloat();
+		this.longitude = in.readFloat();
+		this.images = new ArrayList<String>();
+		in.readList(this.images, String.class.getClassLoader());
+		this.updated = new Date(in.readLong());
+		this.created = new Date(in.readLong());
+	}
+
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.id);
+		dest.writeString(this.title);
+		dest.writeString(this.description);
+		dest.writeFloat(this.latitude);
+		dest.writeFloat(this.longitude);
+		dest.writeList(this.images);
+		dest.writeLong(this.updated.getTime());
+		dest.writeLong(this.created.getTime());
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+	
+	public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() {
+		public Location createFromParcel(Parcel in) {
+			return new Location(in);
+		}
+
+		public Location[] newArray(int size) {
+			return new Location[size];
+		}
+	};
+
 }
