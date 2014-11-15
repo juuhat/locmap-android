@@ -14,7 +14,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -41,12 +43,12 @@ public class NewLocationActivity extends Activity implements
     private FusedLocationProviderApi locationProvider;
     private LocationRequest locationRequest;
 	private Location currentLocation;
-    
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_newlocation);
-		
+
 		//build googleApiClient with locationServices
         googleApiClient = new GoogleApiClient.Builder(this)
         .addApi(LocationServices.API)
@@ -188,6 +190,17 @@ public class NewLocationActivity extends Activity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	
+	/**
+	 * Gets authentication token from SharedPrefences
+	 * @return token
+	 */
+	private String getToken() {
+		SharedPreferences sharedPref = this.getSharedPreferences("user", Context.MODE_PRIVATE);
+		String token = sharedPref.getString("token", "");
+		return token;
+	}
 	
 	
 	/**
@@ -196,6 +209,7 @@ public class NewLocationActivity extends Activity implements
 	 */
 	private void startShowLocationActivity(net.locmap.locmap.models.Location location) {
 		Intent intent = new Intent(this, ShowLocationActivity.class);
+		intent.putExtra("location", location);	
 		startActivity(intent);
 	}
 	
@@ -233,19 +247,21 @@ public class NewLocationActivity extends Activity implements
 				Log.d("JSON convert", "String to JSON fail @ createLocation");
 			}
 			
-			return Network.Post(Network.locationsUrl, json);
+			return Network.Post(Network.locationsUrl, json, getToken());
 		}
 		
-		/**
-		 * 
-		 */
 		@Override
 		protected void onPostExecute(Response res) {
 			//TODO upload pictures
 			
-			//TODO set location data
-			net.locmap.locmap.models.Location newLocation = new net.locmap.locmap.models.Location();
-			startShowLocationActivity(newLocation);
+			if (res.getStatusCode() == 200) {
+				net.locmap.locmap.models.Location newLocation = new net.locmap.locmap.models.Location(res.getBody());
+				Log.e("newLoc", newLocation.getTitle());
+				startShowLocationActivity(newLocation);
+			} else {
+				//TODO show error to user
+			}
+
 		}
 		
 	}
