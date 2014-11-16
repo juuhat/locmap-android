@@ -1,11 +1,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fillViewport="true"
     android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -18,6 +20,7 @@
         <EditText
             android:id="@+id/editNewLocationTitle"
             android:layout_width="fill_parent"
+            android:layout_marginBottom="20dp"
             android:layout_height="wrap_content"
             android:hint="@string/title" />
 
@@ -25,7 +28,8 @@
             android:id="@+id/editNewLocationDescription"
             android:gravity="top"
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
+            android:layout_marginBottom="20dp"
+            android:layout_height="100dp"
             android:inputType="textMultiLine"
             android:hint="@string/desc" />
 
@@ -34,6 +38,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal" >
 
             <LinearLayout
@@ -68,51 +73,32 @@
 
         <!-- Camera and image preview -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <ImageButton
+            <Button
                 android:id="@+id/btnNewLocationCamera"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginBottom="20dp"
                 android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:contentDescription="@string/takePicture"
-                android:onClick="btnNewLocationCamera"
-                android:src="@android:drawable/ic_menu_camera" />
+                android:text="@string/takePicture"
+                android:drawableLeft="@android:drawable/ic_menu_camera"
+                android:onClick="btnNewLocationCamera" />
 
             <ImageView
                 android:id="@+id/imgNewLocationPreview"
-                android:layout_width="120dp"
-                android:layout_height="100dp"
-                android:layout_gravity="right"
-                android:layout_weight="0.5"
-                android:contentDescription="@string/preview" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/btnNewLocationCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/cancel" />
+                android:layout_gravity="center"
+                android:contentDescription="@string/preview" />
 
             <Button
                 android:id="@+id/btnNewLocationCreate"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:drawableLeft="@android:drawable/ic_menu_upload"
                 android:onClick="btnNewLocationCreate"
                 android:text="@string/create" />
-        </LinearLayout>
+        
     </LinearLayout>
-
 </ScrollView>
