@@ -1,5 +1,7 @@
 package net.locmap.locmap;
 
+import java.io.File;
+
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
 
@@ -19,8 +21,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -43,6 +47,9 @@ public class NewLocationActivity extends Activity implements
     private FusedLocationProviderApi locationProvider;
     private LocationRequest locationRequest;
 	private Location currentLocation;
+	private Uri photoUri;
+	//private File file;
+	//private Location location;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,29 @@ public class NewLocationActivity extends Activity implements
 	 */
 	public void btnNewLocationCamera(View view) {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		File photo;
+
+		try {
+			File tempDir = Environment.getExternalStorageDirectory();
+			tempDir = new File(tempDir.getAbsolutePath() + "/.temp/");
+			if (!tempDir.exists()) {
+				tempDir.mkdir();
+			}
+			
+			photo = File.createTempFile("locmapTmp", ".jpg", tempDir);
+			photo.delete();
+			
+		} catch(Exception e) {
+			Log.e("err", e.getMessage());
+			return;
+		}
+		
+		EditText title = (EditText) findViewById(R.id.editNewLocationTitle);
+		
+		this.photoUri = Uri.fromFile(photo);
+		title.setText(photoUri.toString());
+		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+		
 		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 			startActivityForResult(takePictureIntent, 1);
 		}
@@ -114,11 +144,25 @@ public class NewLocationActivity extends Activity implements
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		EditText description = (EditText) findViewById(R.id.editNewLocationDescription);
+		description.setText(photoUri.toString());
+		
 	    if (requestCode == 1 && resultCode == RESULT_OK) {
+	    	Bitmap bitmap = null;
+	    	
+	    	try {
+	    		//this.file = new File(photoUri.getPath());
+				bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+			} catch (Exception e) {
+				description.setText(e.toString());
+				return;
+			}
+	    	
 	        Bundle extras = data.getExtras();
-	        Bitmap imageBitmap = (Bitmap) extras.get("data");
+	        Bitmap thumb = (Bitmap) extras.get("data");
 	        ImageView imgView = (ImageView) findViewById(R.id.imgNewLocationPreview);
-	        imgView.setImageBitmap(imageBitmap);
+	        imgView.setImageBitmap(thumb);
 	    }
 
 	}
@@ -251,17 +295,36 @@ public class NewLocationActivity extends Activity implements
 		}
 		
 		@Override
-		protected void onPostExecute(Response res) {
-			//TODO upload pictures
-			
+		protected void onPostExecute(Response res) {			
 			if (res.getStatusCode() == 200) {
 				net.locmap.locmap.models.Location newLocation = new net.locmap.locmap.models.Location(res.getBody());
-				Log.e("newLoc", newLocation.getTitle());
-				startShowLocationActivity(newLocation);
+				
+				//TODO upload pictures
+				//Start UploadImage asyncTask
+				
 			} else {
 				//TODO show error to user
 			}
 
+		}
+		
+	}
+	
+	/**
+	 * Async task for uploading images
+	 *
+	 */
+	public class UploadImage extends AsyncTask<String, Void, Response> {
+
+		@Override
+		protected Response doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Response res) {
+			//startShowLocationActivity(location);
 		}
 		
 	}
