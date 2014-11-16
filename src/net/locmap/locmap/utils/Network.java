@@ -1,14 +1,19 @@
 package net.locmap.locmap.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.util.Log;
@@ -39,7 +44,6 @@ public class Network {
 	
 	/** 
 	 * Sends HTTP POST request, returns the response
-	 * TODO: Returns only response as string, should return also access token!
 	 * @param url where to send post request
 	 * @param json data to send
 	 * @param token Authentication key
@@ -76,6 +80,54 @@ public class Network {
 		}
 		
 		return res;
+	}
+	
+	
+	/**
+	 * Sends HTTP POST Multipart request, returns response
+	 * @param url where to send post request
+	 * @param file to send
+	 * @param location ObjectId where this image will be attached
+	 * @param token Authentication key
+	 * @return Response
+	 */
+	public static Response Post(String url, File file, String location, String token) {
+		Response res = new Response();
+		InputStream inputstream = null;
+		
+		try {
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(url);
+	        post.setHeader("Authorization", "Bearer " + token);
+			
+			//Build multipart entity
+			MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+			entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			entityBuilder.addTextBody("location", location);
+			entityBuilder.addBinaryBody("image", file);
+			
+			HttpEntity entity = entityBuilder.build();
+			post.setEntity(entity);
+			
+			HttpResponse response = client.execute(post);
+			
+			String body = "";
+			inputstream = response.getEntity().getContent();
+			if (inputstream != null)
+				body = convertInputStreamToString(inputstream);
+			
+			res.setHeaders(response.getAllHeaders());
+			res.setStatusCode(response.getStatusLine().getStatusCode());
+			res.setBody(body);
+			
+		} catch (ClientProtocolException e) {
+			Log.d("ClientProtocolException", e.getMessage());
+		} catch (IOException e) {
+			Log.d("IOException: ", e.getMessage());
+		}
+		
+		return res;
+		
 	}
 	
 	
