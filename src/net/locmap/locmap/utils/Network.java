@@ -29,6 +29,7 @@ public class Network {
 	public final static String registerUrl = base + "auth/register";
 	public final static String loginUrl = base + "auth/login";
 	public final static String locationsUrl = base + "locations";
+	public final static String imagesUrl = base + "images";
 	
 	
 	/**
