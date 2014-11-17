@@ -30,8 +30,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 /**
  * Activity for creating new locations
@@ -48,8 +50,8 @@ public class NewLocationActivity extends Activity implements
     private LocationRequest locationRequest;
 	private Location currentLocation;
 	private Uri photoUri;
-	//private File file;
-	//private Location location;
+	private File image;
+	private net.locmap.locmap.models.Location createdLocation;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class NewLocationActivity extends Activity implements
 		
         googleApiClient.connect();
 		
+        image = null;
 	}
 	
 	
@@ -92,29 +95,27 @@ public class NewLocationActivity extends Activity implements
 	 */
 	public void btnNewLocationCamera(View view) {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		File photo;
+		File tempFile;
 
 		try {
 			File tempDir = Environment.getExternalStorageDirectory();
 			tempDir = new File(tempDir.getAbsolutePath() + "/.temp/");
+			
 			if (!tempDir.exists()) {
 				tempDir.mkdir();
 			}
 			
-			photo = File.createTempFile("locmapTmp", ".jpg", tempDir);
-			photo.delete();
+			tempFile = File.createTempFile("locmapTmp", ".jpg", tempDir);
+			tempFile.delete();
 			
 		} catch(Exception e) {
 			Log.e("err", e.getMessage());
 			return;
 		}
 		
-		EditText title = (EditText) findViewById(R.id.editNewLocationTitle);
+		this.photoUri = Uri.fromFile(tempFile);
 		
-		this.photoUri = Uri.fromFile(photo);
-		title.setText(photoUri.toString());
 		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-		
 		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 			startActivityForResult(takePictureIntent, 1);
 		}
@@ -127,6 +128,13 @@ public class NewLocationActivity extends Activity implements
 	 * @param view
 	 */
 	public void btnNewLocationCreate(View view) {
+		
+		Button btnCreate = (Button) findViewById(R.id.btnNewLocationCreate);
+		btnCreate.setVisibility(View.GONE);
+		
+		ProgressBar progBottom = (ProgressBar) findViewById(R.id.progNewLocationBottom);
+		progBottom.setVisibility(View.VISIBLE);
+		
 		EditText title = (EditText) findViewById(R.id.editNewLocationTitle);
 		EditText description = (EditText) findViewById(R.id.editNewLocationDescription);
 		EditText latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
@@ -145,17 +153,11 @@ public class NewLocationActivity extends Activity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
-		EditText description = (EditText) findViewById(R.id.editNewLocationDescription);
-		description.setText(photoUri.toString());
-		
 	    if (requestCode == 1 && resultCode == RESULT_OK) {
-	    	Bitmap bitmap = null;
 	    	
 	    	try {
-	    		//this.file = new File(photoUri.getPath());
-				bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+	    		this.image = new File(photoUri.getPath());
 			} catch (Exception e) {
-				description.setText(e.toString());
 				return;
 			}
 	    	
@@ -297,10 +299,14 @@ public class NewLocationActivity extends Activity implements
 		@Override
 		protected void onPostExecute(Response res) {			
 			if (res.getStatusCode() == 200) {
-				net.locmap.locmap.models.Location newLocation = new net.locmap.locmap.models.Location(res.getBody());
+				createdLocation = new net.locmap.locmap.models.Location(res.getBody());
 				
-				//TODO upload pictures
-				//Start UploadImage asyncTask
+				//If image is taken start upload
+				if (image != null) {
+					new UploadImage().execute(createdLocation.getId());
+				} else {
+					startShowLocationActivity(createdLocation);
+				}
 				
 			} else {
 				//TODO show error to user
@@ -310,21 +316,26 @@ public class NewLocationActivity extends Activity implements
 		
 	}
 	
+	
 	/**
 	 * Async task for uploading images
-	 *
+	 * 1. parameter: location id
 	 */
 	public class UploadImage extends AsyncTask<String, Void, Response> {
 
 		@Override
 		protected Response doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			return null;
+			return Network.Post(Network.imagesUrl, image, params[0], getToken());
 		}
 		
 		@Override
 		protected void onPostExecute(Response res) {
-			//startShowLocationActivity(location);
+			if (res.getStatusCode() == 200) {
+				startShowLocationActivity(createdLocation);
+			} else {
+				//TODO show error to user
+			}
+
 		}
 		
 	}
