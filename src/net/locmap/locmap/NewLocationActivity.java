@@ -30,10 +30,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 /**
  * Activity for creating new locations
@@ -77,7 +80,7 @@ public class NewLocationActivity extends Activity implements
 	 * @param view
 	 */
 	public void btnNewLocationCoordinatesClicked(View view) {
-		
+
 		EditText latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
 		EditText longitude = (EditText) findViewById(R.id.editNewLocationLongitude);
 		
@@ -94,6 +97,7 @@ public class NewLocationActivity extends Activity implements
 	 * @param view
 	 */
 	public void btnNewLocationCamera(View view) {
+		hideKeyboard();
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File tempFile;
 
@@ -129,11 +133,7 @@ public class NewLocationActivity extends Activity implements
 	 */
 	public void btnNewLocationCreate(View view) {
 		
-		Button btnCreate = (Button) findViewById(R.id.btnNewLocationCreate);
-		btnCreate.setVisibility(View.GONE);
-		
-		ProgressBar progBottom = (ProgressBar) findViewById(R.id.progNewLocationBottom);
-		progBottom.setVisibility(View.VISIBLE);
+		changeProgressBarVisibility(true);
 		
 		EditText title = (EditText) findViewById(R.id.editNewLocationTitle);
 		EditText description = (EditText) findViewById(R.id.editNewLocationDescription);
@@ -144,6 +144,24 @@ public class NewLocationActivity extends Activity implements
 							latitude.getText().toString(), longitude.getText().toString()};
 		
 		new CreateLocation().execute(params);
+	}
+	
+	
+	/**
+	 * Hide/show progressBar and createButton
+	 */
+	public void changeProgressBarVisibility(boolean visible) {
+		Button btnCreate = (Button) findViewById(R.id.btnNewLocationCreate);
+		ProgressBar progBottom = (ProgressBar) findViewById(R.id.progNewLocationBottom);
+		
+		if (visible) {
+			progBottom.setVisibility(View.VISIBLE);
+			btnCreate.setVisibility(View.GONE);
+		} else {
+			progBottom.setVisibility(View.GONE);
+			btnCreate.setVisibility(View.VISIBLE);
+		}
+
 	}
 	
 	
@@ -167,6 +185,19 @@ public class NewLocationActivity extends Activity implements
 	        imgView.setImageBitmap(thumb);
 	    }
 
+	}
+	
+	
+	/**
+	 * Hide soft keyboard in activity
+	 * @param activity
+	 */
+	public void hideKeyboard (){
+	    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	    if (getCurrentFocus() != null) {
+	        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+	        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+	    }
 	}
 	
 	
@@ -305,10 +336,12 @@ public class NewLocationActivity extends Activity implements
 				if (image != null) {
 					new UploadImage().execute(createdLocation.getId());
 				} else {
+					changeProgressBarVisibility(false);
 					startShowLocationActivity(createdLocation);
 				}
 				
 			} else {
+				changeProgressBarVisibility(false);
 				//TODO show error to user
 			}
 
@@ -330,6 +363,7 @@ public class NewLocationActivity extends Activity implements
 		
 		@Override
 		protected void onPostExecute(Response res) {
+			changeProgressBarVisibility(false);
 			if (res.getStatusCode() == 200) {
 				startShowLocationActivity(createdLocation);
 			} else {
