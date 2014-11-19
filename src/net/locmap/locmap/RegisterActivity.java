@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
+import net.locmap.locmap.utils.UIFunctions;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,15 +43,75 @@ public class RegisterActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	/**
+	 * @return RegisterActivity
+	 */
+	private Activity getActivity() {
+		return this;
+	}
 	
+	/**
+	 * Gets user input values and send register request to API
+	 * @param v
+	 */
 	public void btnRegister(View v) {
 		
 		EditText email = (EditText) findViewById(R.id.editRegisterEmail);
 		EditText user = (EditText) findViewById(R.id.editRegisterUser);
 		EditText password = (EditText) findViewById(R.id.editRegisterPassword);
+		EditText passwordConf = (EditText) findViewById(R.id.editRegisterPasswordConfirmation);
+		
+		/**
+		 ********  CHECK INPUT  ******** 
+		 */
+		
+		// check that email fills necessary criteria
+		if ( !UIFunctions.isValidEmail(email.getText().toString()) ) {
+			UIFunctions.showOKDialog(getString(R.string.check_email), this);
+			return;
+		}
+		
+		// check that username has only A-Z chars and numbers
+		String username = user.getText().toString();
+		if (!username.matches("^[A-Za-z0-9ƒ‰÷ˆ≈Â]+$")) {
+			UIFunctions.showOKDialog(getString(R.string.username_characters), this);
+			return;
+		}
+		
+		// check that password at least 8 char long
+		String pw = password.getText().toString(); 
+		if (pw.length() < 8) {
+			UIFunctions.showOKDialog(getString(R.string.password_length), this);
+			return;
+		}
+		
+		// check that password contains at least one letter and one number
+		if (!(pw.matches(".*[A-Za-z].*") && pw.matches(".*[0-9].*")) ) {
+			UIFunctions.showOKDialog(getString(R.string.password_alphanum), this);
+			return;
+		}
+		
+		// also check that passwords match
+		if (!pw.equals(passwordConf.getText().toString())) {
+			UIFunctions.showOKDialog(getString(R.string.password_match), this);
+			return;
+		}
+		
+		
+		/**
+		 ***********   INPUT CHECKED    ***********
+	     */
+		
+		
 		String[] params = {email.getText().toString() , user.getText().toString(), password.getText().toString()};
 		
-		new Register().execute(params);
+		// if connected to Internet..
+		if (Network.isNetworkAvailable(this)){
+			new Register().execute(params);
+		}
+		else {
+			UIFunctions.showOKDialog(getString(R.string.check_internet), this);
+		}
 	}
 	
     /**
@@ -92,9 +153,31 @@ public class RegisterActivity extends Activity {
 		 */
 		@Override
 		protected void onPostExecute(Response res) {
-			// TODO: Something clever when register fails/succeeds
-			TextView registerResult = (TextView) findViewById(R.id.txtRegisterResult);
-			registerResult.setText(res.getBody());
+			int statuscode = res.getStatusCode();
+			String body = res.getBody();
+			String msg = "";
+			
+			// check how request went and update UI accordingly
+			if (statuscode == 200) {
+				// TODO: Direct to LOGIN
+				msg = getString(R.string.register_ok);
+			}
+			else if (statuscode >= 500 && statuscode < 600) {
+				msg = getString(R.string.internal_problems);
+			}
+			// API error for trying to register with reserved email/username
+			// is kind of cryptic, so we need to check the body for some keywords
+			else if (body.contains("duplicate key")) {
+				if (body.contains("locmap.users.$username")) {
+					msg = getString(R.string.username_reserved);
+				}
+				else msg = getString(R.string.email_reserved);			
+			} 
+			else msg = body;
+			
+				
+			UIFunctions.showOKDialog(msg, getActivity());
+			
 		}
 		
 	}
