@@ -16,6 +16,10 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 /**
@@ -40,6 +44,18 @@ public class Network {
 	 */
 	public static Response Post(String url, String json) {
 		return Post(url, json, "");
+	}
+	
+	
+	/**
+	 * Checks whether device is connected to the Internet or not
+	 * @return
+	 */
+	public static boolean isNetworkAvailable(Activity act) {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 	
 	
