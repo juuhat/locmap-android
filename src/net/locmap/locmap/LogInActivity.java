@@ -25,10 +25,23 @@ import android.widget.TextView;
  */
 public class LogInActivity extends Activity {
 	
+	EditText email;
+	EditText password;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_log_in);
+		
+		email = (EditText) findViewById(R.id.editLogInEmail);
+		password = (EditText) findViewById(R.id.editLogInPassword);
+		
+		Intent prevIntent = getIntent();
+		String emailPre = "";
+		if (prevIntent.hasExtra("email"))
+			emailPre = prevIntent.getStringExtra("email");
+		email.setText(emailPre);
+		// TODO: set focus to password
 	}
 
 	@Override
@@ -65,10 +78,7 @@ public class LogInActivity extends Activity {
 	 * @param v
 	 */
 	public void btnLogIn(View v) {
-		EditText username = (EditText) findViewById(R.id.editLogInUser);
-		EditText password = (EditText) findViewById(R.id.editLogInPassword);
-		
-		String[] params = {username.getText().toString(), password.getText().toString()};
+		String[] params = {email.getText().toString(), password.getText().toString()};
 		
 		new LogIn().execute(params);
 	}
@@ -89,7 +99,7 @@ public class LogInActivity extends Activity {
 	 * Sends LogIn request to API.
 	 * Execute needs two parameters.
 	 * 
-	 *  1. parameter: Username
+	 *  1. parameter: Email
 	 *  2. parameter: Password
 	 */
 	public class LogIn extends AsyncTask<String, Void, Response> {

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.content.Intent;
 
 public class RegisterActivity extends Activity {
 
@@ -135,7 +136,6 @@ public class RegisterActivity extends Activity {
 			
 			String json = "";
 			JSONObject jsonObj = new JSONObject();
-			// TODO : Add valid for email and stuff ??
 			try {
 				jsonObj.accumulate("email", params[0]);
 				jsonObj.accumulate("username", params[1]);
@@ -159,8 +159,19 @@ public class RegisterActivity extends Activity {
 			
 			// check how request went and update UI accordingly
 			if (statuscode == 200) {
-				// TODO: Direct to LOGIN
 				msg = getString(R.string.register_ok);
+				String emailPrep = "";
+				try {
+					// get email from response so that it can be prefilled to login form
+					JSONObject respBody = new JSONObject(body);
+					emailPrep = respBody.get("email").toString();
+				} catch (JSONException ex) {
+					Log.d("JSON Convert", "JSON to String failed @ register extract email");
+				}
+				
+				Intent login = new Intent(getActivity(), LogInActivity.class);
+				login.putExtra("email", emailPrep);
+				startActivity(login);
 			}
 			else if (statuscode >= 500 && statuscode < 600) {
 				msg = getString(R.string.internal_problems);
