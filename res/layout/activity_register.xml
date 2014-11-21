@@ -56,8 +56,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username" >
-
-                <requestFocus />
             </EditText>
         </LinearLayout>
 
@@ -112,11 +110,6 @@
             android:paddingRight="8dp"
             android:text="@string/title_activity_register" />
 
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtRegisterResult" 
-            />
     </LinearLayout>
 
 </ScrollView>
