@@ -2,6 +2,7 @@ package net.locmap.locmap;
 
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
+import net.locmap.locmap.utils.UIFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,10 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Functions for user to log in
  * @author Janne Heikkinen
+ * @author Juuso Hatakka
  */
 public class LogInActivity extends Activity {
 	
@@ -61,6 +64,13 @@ public class LogInActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	/**
+	 * @return this activity
+	 */
+	private Activity getActivity() {
+		return this;
 	}
 	
 	/**
@@ -127,17 +137,22 @@ public class LogInActivity extends Activity {
 
 		}
 		
+		/**
+		 * Save access token if login successful.
+		 * Else show error message 
+		 */
 		@Override
 		protected void onPostExecute(Response res) {
-			
-			TextView resultView = (TextView) findViewById(R.id.txtLogInResult);
-			resultView.setText(res.getHeader("x-access-token"));
 			
 			String token = res.getHeader("x-access-token");
 			if (token != null) {
 				saveToken(token);
+				Toast.makeText(getActivity(), R.string.logged_in, Toast.LENGTH_SHORT).show();
+				// TODO: Redirect ??
 			} else {
-				//TODO show error to user
+				String msg = UIFunctions.getErrors(getActivity(), res ,getString(R.string.login_fail));
+				if (msg == null) msg = res.getBody();
+				UIFunctions.showOKDialog(msg, getActivity());
 			}
 			
 		}

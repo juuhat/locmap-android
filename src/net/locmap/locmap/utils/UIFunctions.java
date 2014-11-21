@@ -1,5 +1,6 @@
 package net.locmap.locmap.utils;
 
+import net.locmap.locmap.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,7 +8,6 @@ import android.content.DialogInterface;
 /***
  * Class that wraps small dialog functions and such
  * @author Janne Heikkinen
- *
  */
 public class UIFunctions {
 	
@@ -40,5 +40,26 @@ public class UIFunctions {
 	 */
 	public static boolean isValidEmail(String email) {
 		return email.contains("@") && email.contains(".") && !email.contains(" ");
+	}
+
+
+	/**
+	 * Check response for errors. Checks if response has
+	 * - Internal server errors ( 500-599)
+	 * - Problems with connecting to API (401-499)
+	 * - Bad request 400
+	 * @param res Response to check
+	 * @param error Returns this if response has statuscode 400
+	 * @return Error message from string resources, or null if statuscode successful
+	 */
+	public static String getErrors(Activity current, Response res, String error) {
+		String msg = null;
+		int statuscode = res.getStatusCode();
+		if (statuscode > 400 && statuscode < 600) {
+			msg = current.getString(R.string.internal_problems);
+		} else if (statuscode == 400) {
+			msg = error;
+		}
+		return msg;
 	}
 }

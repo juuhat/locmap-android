@@ -11,11 +11,11 @@
     <string name="action_locations">Locations</string>
     <string name="title_activity_show_location">ShowLocationActivity</string>
    
+    <!-- Problems, officer -->
+    
     <string name="check_internet">Problems connecting to the Internet. Check your connection and try again</string>
     <string name="internal_problems">Service is temporarily unavailable. Please try again later</string>
-    <string name="check_email">Your email address doesn\'t seem to be valid. Try again with a proper address</string>
-    
-    
+    <string name="check_email">Your email address doesn\'t seem to be valid. Try again with a proper address</string>    
         
     <!-- New Location Activity -->
     
@@ -38,6 +38,8 @@
     <string name="notMember">Not a member?</string>
     <string name="register"><u>Register!</u></string>
     <string name="username">username</string>
+    <string name="login_fail">Invalid email or password</string>
+    <string name="logged_in">Logged in!</string>
 
     <!-- Register Activity -->
     
