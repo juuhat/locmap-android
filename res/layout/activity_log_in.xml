@@ -58,6 +58,14 @@
             </EditText>
         </LinearLayout>
 
+        <CheckBox
+            android:layout_marginTop="5dp"
+            android:id="@+id/cbLogInRemember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remember_me"
+            android:onClick="onCbRememberClick" />
+
         <Button
             android:id="@+id/btnLogIn"
             android:layout_width="wrap_content"
@@ -90,12 +98,7 @@
                 android:text="@string/register" />
             
         </LinearLayout>
-        
-        <TextView 
-            android:id="@+id/txtLogInResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+       
     </LinearLayout>
 
 </ScrollView>

@@ -3,10 +3,15 @@ package net.locmap.locmap.utils;
 import net.locmap.locmap.R;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 
 /***
  * Class that wraps small dialog functions and such
+ * TODO: Function that re-logins if token is not valid anymore
+ *       and if re-login is not possible (remember me not checked)
+ *       clears token from SharedPreferences and shows dialog with appropriate message
  * @author Janne Heikkinen
  */
 public class UIFunctions {
@@ -61,5 +66,55 @@ public class UIFunctions {
 			msg = error;
 		}
 		return msg;
+	}
+
+
+	/**
+	 * Clears login info from SharedPreferences
+	 * @param current current activity
+	 */
+	public static void clearLoginData(Activity current) {
+		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.remove("email");
+		editor.remove("password");
+		editor.commit();
+	}
+
+
+	/**
+	 * Gets password that user has selected this app to remember
+	 * @param current Activity
+	 * @return password, if defined. Empty string if not
+	 */
+	public static String getPassword(Activity current) {
+		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
+		return sharedPref.getString("password", "");
+	}
+	
+	
+	/**
+	 * Gets email that user has selected this app to remember
+	 * @param current Activity
+	 * @return email, if any. Empty string if not defined
+	 */
+	public static String getEmail(Activity current) {
+		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
+		return sharedPref.getString("email", "");
+	}
+
+
+	/**
+	 * Saves email and password to SharedPreferences
+	 * @param current Activity
+	 * @param email Valid email
+	 * @param password User password
+	 */
+	public static void saveLoginInfo(Activity current, String email, String password) {
+		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putString("email", email);
+		editor.putString("password", password);
+		editor.commit();
 	}
 }

@@ -40,7 +40,8 @@
     <string name="username">username</string>
     <string name="login_fail">Invalid email or password</string>
     <string name="logged_in">Logged in!</string>
-
+    <string name="remember_me">Remember me</string>
+    
     <!-- Register Activity -->
     
     <string name="title_activity_register">Register</string>

@@ -13,12 +13,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Contacts.Intents.UI;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -39,11 +40,23 @@ public class LogInActivity extends Activity {
 		email = (EditText) findViewById(R.id.editLogInEmail);
 		password = (EditText) findViewById(R.id.editLogInPassword);
 		
+		// prefill email and password 
 		Intent prevIntent = getIntent();
 		String emailPre = "";
-		if (prevIntent.hasExtra("email"))
+		String passwordPre = "";
+		// if activity opened from register, write newly registered email
+		if (prevIntent.hasExtra("email")) {
 			emailPre = prevIntent.getStringExtra("email");
+			UIFunctions.clearLoginData(this);
+		} 
+		// if not, check if account info saved to preferences
+		else {
+			emailPre = UIFunctions.getEmail(this);
+			passwordPre = UIFunctions.getPassword(this);
+		}
+		
 		email.setText(emailPre);
+		password.setText(passwordPre);
 		// TODO: set focus to password
 	}
 
@@ -82,13 +95,29 @@ public class LogInActivity extends Activity {
 		startActivity(intent);
 	}
 	
+	/**
+	 * Listens to clicks on "Remember me" -checkbox.
+	 * If box get's unchecked, clear login data from SharedPreferences
+	 * @param v
+	 */
+	public void onCbRememberClick(View v) {
+		CheckBox cb = (CheckBox) v;
+		if (!cb.isChecked()) {
+			UIFunctions.clearLoginData(this);
+			Log.d("LOGIN CLEARED", "Login data cleared at cbRememberClick");
+		}
+	}
+	
 	
 	/**
 	 * Click event for Log In -button.
+	 * Save email and password only if checkbox checked and login successful
 	 * @param v
 	 */
 	public void btnLogIn(View v) {
-		String[] params = {email.getText().toString(), password.getText().toString()};
+		String emailText = email.getText().toString();
+		String pwText = password.getText().toString();
+		String[] params = {emailText, pwText};
 		
 		new LogIn().execute(params);
 	}
@@ -98,7 +127,7 @@ public class LogInActivity extends Activity {
 	 * @param token
 	 */
 	private void saveToken(String token) {
-		SharedPreferences sharedPref = this.getSharedPreferences("user", Context.MODE_PRIVATE);
+		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
 		editor.putString("token", token);
 		editor.commit();
@@ -139,15 +168,22 @@ public class LogInActivity extends Activity {
 		
 		/**
 		 * Save access token if login successful.
-		 * Else show error message 
+		 * Else show error message.
+		 * Save email and password if user has checked Remember me -checkbox
 		 */
 		@Override
 		protected void onPostExecute(Response res) {
 			
 			String token = res.getHeader("x-access-token");
+			//login successful, save token and possibly login info
 			if (token != null) {
 				saveToken(token);
 				Toast.makeText(getActivity(), R.string.logged_in, Toast.LENGTH_SHORT).show();
+				CheckBox remember = (CheckBox) findViewById(R.id.cbLogInRemember);
+				
+				if (remember.isChecked()) {
+					UIFunctions.saveLoginInfo(getActivity(),email.getText().toString(), password.getText().toString());
+				}
 				// TODO: Redirect ??
 			} else {
 				String msg = UIFunctions.getErrors(getActivity(), res ,getString(R.string.login_fail));
