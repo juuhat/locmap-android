@@ -31,6 +31,7 @@ public class LogInActivity extends Activity {
 	
 	EditText email;
 	EditText password;
+	CheckBox remember;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class LogInActivity extends Activity {
 		
 		email = (EditText) findViewById(R.id.editLogInEmail);
 		password = (EditText) findViewById(R.id.editLogInPassword);
+		remember = (CheckBox) findViewById(R.id.cbLogInRemember);
 		
 		// prefill email and password 
 		Intent prevIntent = getIntent();
@@ -53,6 +55,11 @@ public class LogInActivity extends Activity {
 		else {
 			emailPre = UIFunctions.getEmail(this);
 			passwordPre = UIFunctions.getPassword(this);
+			
+			if (emailPre.length() > 0 && passwordPre.length() > 0) {
+				remember.setChecked(true);
+			}
+			
 		}
 		
 		email.setText(emailPre);
