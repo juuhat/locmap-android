@@ -1,5 +1,8 @@
 package net.locmap.locmap;
 
+import java.util.ArrayList;
+
+import net.locmap.locmap.models.Location;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +27,7 @@ public class MainActivity extends Activity {
 	
 	
 	/**
-	 * Click event log in button
+	 * Click event for log in button
 	 * @param view
 	 */
 	public void btnMainLogIn(View view) {
@@ -32,6 +35,29 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
+	/**
+	 * Click event for locations button
+	 * @param view
+	 */
+	public void btnMainLocations(View view) {
+		
+		//TODO change to Locations activity
+		Intent intent = new Intent(this, ShowLocationActivity.class);
+		
+		//test data
+		Location location = new Location();
+		location.setId("545b73fe106958212eaeabdf");
+		location.setTitle("Test");
+		location.setDescription("Test description");
+		ArrayList<String> imgs = new ArrayList<String>();
+		imgs.add("545b7436106958212eaeabe0");
+		imgs.add("5475c4a119bedfd609b78c7d");
+		location.setImages(imgs);
+		
+		intent.putExtra("location", location);
+		
+		startActivity(intent);
+	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {	

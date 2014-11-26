@@ -15,6 +15,7 @@
         android:layout_width="fill_parent"
         android:layout_height="80dp"
         android:layout_marginBottom="20dp"
+        android:onClick="btnMainLocations"
         android:gravity="center"
         android:text="@string/action_locations" />
 
