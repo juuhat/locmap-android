@@ -134,7 +134,7 @@ public class LogInActivity extends Activity {
 	 * @param token
 	 */
 	private void saveToken(String token) {
-		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences sharedPref = this.getSharedPreferences("user", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
 		editor.putString("token", token);
 		editor.commit();
