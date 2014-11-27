@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
+import net.locmap.locmap.utils.UIFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -288,6 +289,14 @@ public class NewLocationActivity extends Activity implements
 		Intent intent = new Intent(this, ShowLocationActivity.class);
 		intent.putExtra("location", location);	
 		startActivity(intent);
+	}
+	
+	
+	/**
+	 * @return this activity
+	 */
+	private Activity getActivity() {
+		return this;
 	}
 	
 	
