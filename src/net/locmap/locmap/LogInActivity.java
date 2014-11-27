@@ -178,7 +178,7 @@ public class LogInActivity extends Activity {
 			//login successful, save token and possibly login info
 			if (token != null) {
 				saveToken(token);
-				Toast.makeText(getActivity(), R.string.logged_in, Toast.LENGTH_SHORT).show();
+				UIFunctions.showToast(getActivity(), getString(R.string.logged_in));
 				CheckBox remember = (CheckBox) findViewById(R.id.cbLogInRemember);
 				
 				if (remember.isChecked()) {

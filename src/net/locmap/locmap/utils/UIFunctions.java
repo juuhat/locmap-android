@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 /***
  * Class that wraps small dialog functions and such
@@ -116,5 +117,16 @@ public class UIFunctions {
 		editor.putString("email", email);
 		editor.putString("password", password);
 		editor.commit();
+	}
+
+
+	/**
+	 * Shows short toast
+	 * @param activity current
+	 * @param msg to toast
+	 */
+	public static void showToast(Activity activity, String msg) {
+		Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+		
 	}
 }
