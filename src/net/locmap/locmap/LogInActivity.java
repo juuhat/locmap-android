@@ -8,19 +8,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Contacts.Intents.UI;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 /**
  * Functions for user to log in
@@ -129,17 +125,6 @@ public class LogInActivity extends Activity {
 		new LogIn().execute(params);
 	}
 	
-	/**
-	 * Saves token in SharedPreferences
-	 * @param token
-	 */
-	private void saveToken(String token) {
-		SharedPreferences sharedPref = this.getSharedPreferences("user", Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.putString("token", token);
-		editor.commit();
-	}
-	
 	
 	/**
 	 * Sends LogIn request to API.
@@ -184,14 +169,23 @@ public class LogInActivity extends Activity {
 			String token = res.getHeader("x-access-token");
 			//login successful, save token and possibly login info
 			if (token != null) {
-				saveToken(token);
+				String username = "";
+				try {
+					JSONObject body = new JSONObject(res.getBody());
+					username = body.getString("username");
+				} catch (JSONException ex) {
+					Log.d("JSON ERROR", ex.getMessage());
+				}
+				UIFunctions.saveToken(getActivity(), token, username);
 				UIFunctions.showToast(getActivity(), getString(R.string.logged_in));
 				CheckBox remember = (CheckBox) findViewById(R.id.cbLogInRemember);
 				
 				if (remember.isChecked()) {
 					UIFunctions.saveLoginInfo(getActivity(),email.getText().toString(), password.getText().toString());
 				}
-				// TODO: Redirect ??
+				// redirect to main
+				Intent intent = new Intent(getActivity(), MainActivity.class);
+				startActivity(intent);
 			} else {
 				String msg = UIFunctions.getErrors(getActivity(), res ,getString(R.string.login_fail));
 				if (msg == null) msg = res.getBody();
