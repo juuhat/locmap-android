@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 /***
  * Class that wraps small dialog functions and such
@@ -15,7 +16,7 @@ import android.content.SharedPreferences;
  * @author Janne Heikkinen
  */
 public class UIFunctions {
-	
+	private static final String prefKey = "user"; // SharedPreferences key
 	
 	/**
 	 * Puts modal dialog to display. Only button available is OK which closes dialog
@@ -116,5 +117,50 @@ public class UIFunctions {
 		editor.putString("email", email);
 		editor.putString("password", password);
 		editor.commit();
+	}
+
+	
+	/**
+	 * Saves token in SharedPreferences
+	 * @param current Activity
+	 * @param token Acces-token
+	 * @param user Username who owns this token
+	 */
+	public static void saveToken(Activity current, String token, String user) {
+		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putString("token", token);
+		editor.putString("username", user);
+		editor.commit();
+	}
+
+	/**
+	 * Gets access-token
+	 * @param current Activity
+	 * @return Access-token if available, otherwise null
+	 */
+	public static String getToken(Activity current) {
+		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+		return sharedPref.getString("token", null);
+	}
+	
+	/**
+	 * Shows short toast
+	 * @param activity current
+	 * @param msg to toast
+	 */
+	public static void showToast(Activity activity, String msg) {
+		Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+		
+	}
+
+
+	/**
+	 * Clears auth-token and username from sharedpref
+	 * @param current Activity
+	 */
+	public static void clearToken(Activity current) {
+		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+		sharedPref.edit().clear();
 	}
 }

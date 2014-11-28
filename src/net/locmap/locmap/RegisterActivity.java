@@ -63,7 +63,7 @@ public class RegisterActivity extends Activity {
 		
 		/**
 		 ********  CHECK INPUT  ******** 
-		 */
+		 
 		
 		// check that email fills necessary criteria
 		if ( !UIFunctions.isValidEmail(email.getText().toString()) ) {
@@ -168,9 +168,10 @@ public class RegisterActivity extends Activity {
 					Log.d("JSON Convert", "JSON to String failed @ register extract email");
 				}
 				
-				Intent login = new Intent(getActivity(), LogInActivity.class);
+				Intent login = new Intent();
 				login.putExtra("email", emailPrep);
-				startActivity(login);
+				setResult(Activity.RESULT_OK, login);
+				getActivity().finish();
 			}
 			else if (statuscode >= 500 && statuscode < 600) {
 				msg = getString(R.string.internal_problems);
@@ -185,8 +186,7 @@ public class RegisterActivity extends Activity {
 			} 
 			else msg = body;
 			
-				
-			UIFunctions.showOKDialog(msg, getActivity());
+			UIFunctions.showToast(getActivity(),msg);
 			
 		}
 		
