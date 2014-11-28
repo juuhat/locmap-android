@@ -200,7 +200,6 @@ public class LogInActivity extends Activity {
 					UIFunctions.saveLoginInfo(getActivity(), email.getText()
 							.toString(), password.getText().toString());
 				}
-				// redirect to main
 				getActivity().finish();
 			} else {
 				String msg = UIFunctions.getErrors(getActivity(), res,
