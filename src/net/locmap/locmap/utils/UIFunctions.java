@@ -16,7 +16,7 @@ import android.widget.Toast;
  * @author Janne Heikkinen
  */
 public class UIFunctions {
-	
+	private static final String prefKey = "user"; // SharedPreferences key
 	
 	/**
 	 * Puts modal dialog to display. Only button available is OK which closes dialog
@@ -127,7 +127,7 @@ public class UIFunctions {
 	 * @param user Username who owns this token
 	 */
 	public static void saveToken(Activity current, String token, String user) {
-		SharedPreferences sharedPref = current.getSharedPreferences("user", Context.MODE_PRIVATE);
+		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
 		editor.putString("token", token);
 		editor.putString("username", user);
@@ -140,7 +140,7 @@ public class UIFunctions {
 	 * @return Access-token if available, otherwise null
 	 */
 	public static String getToken(Activity current) {
-		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
 		return sharedPref.getString("token", null);
 	}
 	
@@ -152,5 +152,15 @@ public class UIFunctions {
 	public static void showToast(Activity activity, String msg) {
 		Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
 		
+	}
+
+
+	/**
+	 * Clears auth-token and username from sharedpref
+	 * @param current Activity
+	 */
+	public static void clearToken(Activity current) {
+		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+		sharedPref.edit().clear();
 	}
 }
