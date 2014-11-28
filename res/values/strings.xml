@@ -21,6 +21,7 @@
     <!-- Main Activity -->
     
     <string name="logout">Log out</string>
+    <string name="logged_out">Logged out</string>
     
     <!-- New Location Activity -->
     

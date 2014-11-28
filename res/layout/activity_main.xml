@@ -38,9 +38,7 @@
             android:layout_marginRight="20dp"
             android:layout_weight="0.5"
             android:layout_height="match_parent"
-            android:onClick="btnMainLogIn"
-            android:gravity="center"
-            android:text="@string/action_login" />
+            android:gravity="center" />
 
         <Button
             android:id="@+id/btnMainSettings"
