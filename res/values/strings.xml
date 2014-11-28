@@ -2,7 +2,7 @@
 <resources>
 
     <!-- General -->
-    
+
     <string name="app_name">LocMap</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -11,15 +11,15 @@
     <string name="action_locations">Locations</string>
     <string name="action_collections">Collections</string>
     <string name="title_activity_show_location">ShowLocationActivity</string>
-   
+
     <!-- Problems, officer -->
-    
+
     <string name="check_internet">Problems connecting to the Internet. Check your connection and try again</string>
     <string name="internal_problems">Service is temporarily unavailable. Please try again later</string>
-    <string name="check_email">Your email address doesn\'t seem to be valid. Try again with a proper address</string>    
-    
+    <string name="check_email">Your email address doesn\'t seem to be valid. Try again with a proper address</string>
+
     <!-- New Location Activity -->
-    
+
     <string name="title_activity_location">New location</string>
     <string name="getCoordinates">Get coordinates</string>
     <string name="title">Title</string>
@@ -32,7 +32,7 @@
     <string name="longitude">Longitude</string>
 
     <!-- Log in Activity -->
-    
+
     <string name="title_activity_log_in">Log in</string>
     <string name="user">User</string>
     <string name="password">Password</string>
@@ -42,9 +42,9 @@
     <string name="login_fail">Invalid email or password</string>
     <string name="logged_in">Logged in!</string>
     <string name="remember_me">Remember me</string>
-    
+
     <!-- Register Activity -->
-    
+
     <string name="title_activity_register">Register</string>
     <string name="email">Email</string>
     <string name="password_conf">Confirm password</string>
@@ -55,6 +55,10 @@
     <string name="password_match">Passwords don\'t match</string>
     <string name="username_characters">Username has some forbidden characters. Use only letters A-Z, Ä, Ö, Å and numbers</string>
     <string name="password_alphanum">Password needs to have at least one letter A-Z and one number</string>
-    
+
+    <!-- Locations Activity -->
+    <string name="title_activity_locations">Locations</string>
+    <string name="new_location">New location</string>
+    <string name="my_locations">My Locations</string>
     
 </resources>
