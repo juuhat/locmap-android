@@ -40,22 +40,7 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void btnMainLocations(View view) {
-		
-		//TODO change to Locations activity
-		Intent intent = new Intent(this, ShowLocationActivity.class);
-		
-		//test data
-		Location location = new Location();
-		location.setId("545b73fe106958212eaeabdf");
-		location.setTitle("Test");
-		location.setDescription("Test description");
-		ArrayList<String> imgs = new ArrayList<String>();
-		imgs.add("545b7436106958212eaeabe0");
-		imgs.add("5475c4a119bedfd609b78c7d");
-		location.setImages(imgs);
-		
-		intent.putExtra("location", location);
-		
+		Intent intent = new Intent(this, LocationsActivity.class);
 		startActivity(intent);
 	}
 	
