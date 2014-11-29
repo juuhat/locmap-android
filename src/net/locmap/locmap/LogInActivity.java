@@ -185,13 +185,15 @@ public class LogInActivity extends Activity {
 			// login successful, save token and possibly login info
 			if (token != null) {
 				String username = "";
+				String id = "";
 				try {
 					JSONObject body = new JSONObject(res.getBody());
 					username = body.getString("username");
+					id = body.getString("_id");
 				} catch (JSONException ex) {
 					Log.d("JSON ERROR", ex.getMessage());
 				}
-				UIFunctions.saveToken(getActivity(), token, username);
+				UIFunctions.saveToken(getActivity(), token, username, id);
 				UIFunctions.showToast(getActivity(),
 						getString(R.string.logged_in));
 				CheckBox remember = (CheckBox) findViewById(R.id.cbLogInRemember);

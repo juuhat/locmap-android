@@ -125,12 +125,14 @@ public class UIFunctions {
 	 * @param current Activity
 	 * @param token Acces-token
 	 * @param user Username who owns this token
+	 * @param id ObjectId for user
 	 */
-	public static void saveToken(Activity current, String token, String user) {
+	public static void saveToken(Activity current, String token, String username, String id) {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
 		editor.putString("token", token);
-		editor.putString("username", user);
+		editor.putString("username", username);
+		editor.putString("id", id);
 		editor.commit();
 	}
 
@@ -143,6 +145,18 @@ public class UIFunctions {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
 		return sharedPref.getString("token", null);
 	}
+	
+	
+	/**
+	 * Gets logged in user's ObjectId
+	 * @param current Activity
+	 * @return id if available, otherwise null
+	 */
+	public static String getId(Activity current) {
+		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+		return sharedPref.getString("id", null);
+	}
+	
 	
 	/**
 	 * Shows short toast
