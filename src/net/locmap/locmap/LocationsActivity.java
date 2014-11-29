@@ -6,6 +6,7 @@ import net.locmap.locmap.models.Location;
 import net.locmap.locmap.models.User;
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
+import net.locmap.locmap.utils.UIFunctions;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,8 +29,12 @@ public class LocationsActivity extends Activity {
 		
 		this.listUserLocations = (ListView) findViewById(R.id.listLocationsUsers);
  
-		//TODO get current user's id
-		new GetUserLocations().execute("5467a624874603b123bf07be");
+		String userId = UIFunctions.getId(this);
+		if (userId != null) {
+			new GetUserLocations().execute(userId);
+		} else {
+			//TODO show 'Log in' text to user?
+		}
 	}
 	
 	
