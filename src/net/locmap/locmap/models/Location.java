@@ -3,6 +3,7 @@ package net.locmap.locmap.models;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,8 +65,13 @@ public class Location implements Parcelable {
 			this.latitude = (float) jsonObj.getDouble("latitude");
 			this.longitude = (float) jsonObj.getDouble("longitude");
 			
-			//TODO get values from json
 			this.images = new ArrayList<String>();
+			JSONArray jsonImages = jsonObj.getJSONArray("images");
+			for (int i = 0; i < jsonImages.length(); i++) {
+				this.images.add(jsonImages.getString(i));
+			}
+			
+			//TODO get values from json
 			this.created = new Date();
 			this.updated = new Date();
 			
