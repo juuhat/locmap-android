@@ -64,7 +64,8 @@ public class LocationsActivity extends Activity {
 	    listUserLocations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startShowLocationActivity(user.getLocations().get(position));
+				new GetLocation().execute(user.getLocations().get(position).getId());
+				//startShowLocationActivity(user.getLocations().get(position));
 			}
 		});
 	}
@@ -88,6 +89,22 @@ public class LocationsActivity extends Activity {
 				fillUserLocations();
 			}
 		}
+	}
+	
+	public class GetLocation extends AsyncTask<String, Void, Response> {
+		@Override
+		protected Response doInBackground(String... params) {
+			return Network.Get(Network.locationsUrl + params[0]);
+		}
+		
+		@Override
+		protected void onPostExecute(Response res) {
+			if (res.getStatusCode() == 200) {
+				Location loc = new Location(res.getBody());
+				startShowLocationActivity(loc);
+			}
+		}
+		
 	}
 	
 }
