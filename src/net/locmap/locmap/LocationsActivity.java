@@ -50,6 +50,16 @@ public class LocationsActivity extends Activity {
 	
 	
 	/**
+	 * Click event for starting NewLocationActity
+	 * @param view
+	 */
+	public void btnLocationsNew(View view) {
+		Intent intent = new Intent(this, NewLocationActivity.class);
+		startActivity(intent);
+	}
+	
+	
+	/**
 	 * Set up "My locations" listView
 	 */
 	private void fillUserLocations() {
