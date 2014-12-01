@@ -58,7 +58,6 @@ public class Location implements Parcelable {
 	public Location(String json) {
 		try {
 			JSONObject jsonObj = new JSONObject(json);
-			Log.e("json", json);
 			this.id = jsonObj.getString("_id");
 			this.title = jsonObj.getString("title");
 			this.description = jsonObj.getString("description");
@@ -66,9 +65,11 @@ public class Location implements Parcelable {
 			this.longitude = (float) jsonObj.getDouble("longitude");
 			
 			this.images = new ArrayList<String>();
-			JSONArray jsonImages = jsonObj.getJSONArray("images");
-			for (int i = 0; i < jsonImages.length(); i++) {
-				this.images.add(jsonImages.getString(i));
+			JSONArray jsonImages = jsonObj.optJSONArray("images");
+			if (jsonImages != null) {
+				for (int i = 0; i < jsonImages.length(); i++) {
+					this.images.add(jsonImages.getString(i));
+				}
 			}
 			
 			//TODO get values from json

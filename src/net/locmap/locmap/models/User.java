@@ -34,15 +34,17 @@ public class User {
 		try {
 			JSONObject jsonObj = new JSONObject(json);
 			this.id = jsonObj.getString("_id");
-			//this.email = jsonObj.getString("email");
+			this.email = jsonObj.optString("email");
 			this.username = jsonObj.getString("username");
 			
 			this.locations = new ArrayList<Location>();
-			JSONArray jsonLocations = jsonObj.getJSONArray("locations");
-			for (int i = 0; i < jsonLocations.length(); i++) {
-				JSONObject row = jsonLocations.getJSONObject(i);
-				Location loc = new Location(row.toString());
-				this.locations.add(loc);
+			JSONArray jsonLocations = jsonObj.optJSONArray("locations");
+			if (jsonLocations != null) {
+				for (int i = 0; i < jsonLocations.length(); i++) {
+					JSONObject row = jsonLocations.getJSONObject(i);
+					Location loc = new Location(row.toString());
+					this.locations.add(loc);
+				}	
 			}
 			
 			//TODO get collections from JSON
