@@ -9,24 +9,24 @@ import java.util.Date;
  * 
  * Collection is a set of locations
  */
-public class Collection {
+public class CollectionModel {
 	private String id;
 	private String title;
 	private String description;
-	private ArrayList<Location> locations;
+	private ArrayList<LocationModel> locations;
 	private Date updated;
 	private Date created;
 	
-	public Collection() {
+	public CollectionModel() {
 		this.id = "";
 		this.title = "";
 		this.description = "";
-		this.locations = new ArrayList<Location>();
+		this.locations = new ArrayList<LocationModel>();
 		this.created = new Date();
 		this.updated = new Date();
 	}
 	
-	public Collection(String id, String title, String description, ArrayList<Location> locations, Date updated, Date created) {
+	public CollectionModel(String id, String title, String description, ArrayList<LocationModel> locations, Date updated, Date created) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -51,7 +51,7 @@ public class Collection {
 	 * Adds Location to collection datastructure
 	 * @param loc location to be added
 	 */
-	public void addLocation(Location loc) {
+	public void addLocation(LocationModel loc) {
 		locations.add(loc);
 	}
 	
@@ -79,11 +79,11 @@ public class Collection {
 		this.description = description;
 	}
 
-	public ArrayList<Location> getLocations() {
+	public ArrayList<LocationModel> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(ArrayList<Location> locations) {
+	public void setLocations(ArrayList<LocationModel> locations) {
 		this.locations = locations;
 	}
 

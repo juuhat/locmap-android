@@ -2,7 +2,7 @@ package net.locmap.locmap;
 
 import java.util.ArrayList;
 
-import net.locmap.locmap.models.Location;
+import net.locmap.locmap.models.LocationModel;
 import net.locmap.locmap.utils.UIFunctions;
 import android.app.Activity;
 import android.content.Intent;

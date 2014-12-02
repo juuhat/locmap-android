@@ -3,7 +3,7 @@ package net.locmap.locmap;
 import java.io.InputStream;
 import java.net.URL;
 
-import net.locmap.locmap.models.Location;
+import net.locmap.locmap.models.LocationModel;
 import net.locmap.locmap.utils.Network;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 public class ShowLocationActivity extends Activity {
 	
-	private Location location;
+	private LocationModel location;
 	private LinearLayout imageLayout;
 	
 	@Override
@@ -25,7 +25,7 @@ public class ShowLocationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_location);
 		
-		this.location = (Location) getIntent().getExtras().getParcelable("location");
+		this.location = (LocationModel) getIntent().getExtras().getParcelable("location");
 		updateTextViews();
 		
 		this.imageLayout = (LinearLayout) findViewById(R.id.layoutShowLocationImages);

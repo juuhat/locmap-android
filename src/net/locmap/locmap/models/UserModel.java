@@ -9,40 +9,40 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class User {
+public class UserModel {
 	private String id;
 	private String email;
 	private String username;
 	private Date created;
-	private ArrayList<Location> locations;
-	private ArrayList<Collection> collections;
+	private ArrayList<LocationModel> locations;
+	private ArrayList<CollectionModel> collections;
 	
-	public User() {
+	public UserModel() {
 		this.id = "";
 		this.email = "";
 		this.username = "";
 		this.created = new Date();
-		this.locations = new ArrayList<Location>();
-		this.collections = new ArrayList<Collection>();
+		this.locations = new ArrayList<LocationModel>();
+		this.collections = new ArrayList<CollectionModel>();
 	}
 	
 	/**
 	 * Constructor using JSON String
 	 * @param json
 	 */
-	public User(String json) {
+	public UserModel(String json) {
 		try {
 			JSONObject jsonObj = new JSONObject(json);
 			this.id = jsonObj.getString("_id");
 			this.email = jsonObj.optString("email");
 			this.username = jsonObj.getString("username");
 			
-			this.locations = new ArrayList<Location>();
+			this.locations = new ArrayList<LocationModel>();
 			JSONArray jsonLocations = jsonObj.optJSONArray("locations");
 			if (jsonLocations != null) {
 				for (int i = 0; i < jsonLocations.length(); i++) {
 					JSONObject row = jsonLocations.getJSONObject(i);
-					Location loc = new Location(row.toString());
+					LocationModel loc = new LocationModel(row.toString());
 					this.locations.add(loc);
 				}	
 			}
@@ -80,19 +80,19 @@ public class User {
 		this.username = username;
 	}
 
-	public ArrayList<Location> getLocations() {
+	public ArrayList<LocationModel> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(ArrayList<Location> locations) {
+	public void setLocations(ArrayList<LocationModel> locations) {
 		this.locations = locations;
 	}
 
-	public ArrayList<Collection> getCollections() {
+	public ArrayList<CollectionModel> getCollections() {
 		return collections;
 	}
 
-	public void setCollections(ArrayList<Collection> collections) {
+	public void setCollections(ArrayList<CollectionModel> collections) {
 		this.collections = collections;
 	}
 	
