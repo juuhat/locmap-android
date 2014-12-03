@@ -17,6 +17,12 @@ import android.widget.Toast;
  */
 public class UIFunctions {
 	private static final String prefKey = "user"; // SharedPreferences key
+	private static final String tokenKey = "token";
+	private static final String emailKey = "email";
+	private static final String pwKey = "password";
+	private static final String usernameKey = "username";
+	private static final String idKey = "id";
+	
 	
 	/**
 	 * Puts modal dialog to display. Only button available is OK which closes dialog
@@ -77,8 +83,8 @@ public class UIFunctions {
 	public static void clearLoginData(Activity current) {
 		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.remove("email");
-		editor.remove("password");
+		editor.remove(emailKey);
+		editor.remove(pwKey);
 		editor.commit();
 	}
 
@@ -90,7 +96,7 @@ public class UIFunctions {
 	 */
 	public static String getPassword(Activity current) {
 		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
-		return sharedPref.getString("password", "");
+		return sharedPref.getString(pwKey, "");
 	}
 	
 	
@@ -101,7 +107,7 @@ public class UIFunctions {
 	 */
 	public static String getEmail(Activity current) {
 		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
-		return sharedPref.getString("email", "");
+		return sharedPref.getString(emailKey, "");
 	}
 
 
@@ -114,8 +120,8 @@ public class UIFunctions {
 	public static void saveLoginInfo(Activity current, String email, String password) {
 		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.putString("email", email);
-		editor.putString("password", password);
+		editor.putString(emailKey, email);
+		editor.putString(pwKey, password);
 		editor.commit();
 	}
 
@@ -130,9 +136,9 @@ public class UIFunctions {
 	public static void saveToken(Activity current, String token, String username, String id) {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.putString("token", token);
-		editor.putString("username", username);
-		editor.putString("id", id);
+		editor.putString(tokenKey, token);
+		editor.putString(usernameKey, username);
+		editor.putString(idKey, id);
 		editor.commit();
 	}
 
@@ -143,7 +149,7 @@ public class UIFunctions {
 	 */
 	public static String getToken(Activity current) {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
-		return sharedPref.getString("token", null);
+		return sharedPref.getString(tokenKey, null);
 	}
 	
 	
@@ -154,7 +160,7 @@ public class UIFunctions {
 	 */
 	public static String getId(Activity current) {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
-		return sharedPref.getString("id", null);
+		return sharedPref.getString(idKey, null);
 	}
 	
 	
@@ -175,6 +181,7 @@ public class UIFunctions {
 	 */
 	public static void clearToken(Activity current) {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
-		sharedPref.edit().clear();
+		sharedPref.edit().remove(tokenKey).commit();
+		
 	}
 }
