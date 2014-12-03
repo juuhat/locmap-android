@@ -106,19 +106,19 @@ public class LocationModel implements Parcelable {
 		this.description = description;
 	}
 
-	public Float getLatitude() {
+	public float getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(Float latitude) {
+	public void setLatitude(float latitude) {
 		this.latitude = latitude;
 	}
 
-	public Float getLongitude() {
+	public float getLongitude() {
 		return longitude;
 	}
 
-	public void setFloat(Float longitude) {
+	public void setLongitude(float longitude) {
 		this.longitude = longitude;
 	}
 
