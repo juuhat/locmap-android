@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
 		login = (Button) findViewById(R.id.btnMainLogIn);
 
 		drawLoginOrLogout();
+		UIFunctions.initDistance(this);
 	}
 
 	/**
@@ -112,6 +113,16 @@ public class MainActivity extends Activity {
 	 */
 	public void btnMainLocations(View view) {
 		Intent intent = new Intent(this, LocationsActivity.class);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Click event for settings button
+	 * 
+	 * @param view
+	 */
+	public void btnMainSettings(View view) {
+		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 	}
 

@@ -16,13 +16,13 @@
 
     <string name="check_internet">Problems connecting to the Internet. Check your connection and try again</string>
     <string name="internal_problems">Service is temporarily unavailable. Please try again later</string>
-    <string name="check_email">Your email address doesn\'t seem to be valid. Try again with a proper address</string>    
-    
+    <string name="check_email">Your email address doesn\'t seem to be valid. Try again with a proper address</string>
+
     <!-- Main Activity -->
-    
+
     <string name="logout">Log out</string>
     <string name="logged_out">Logged out</string>
-    
+
     <!-- New Location Activity -->
 
     <string name="title_activity_location">New location</string>
@@ -62,8 +62,14 @@
     <string name="password_alphanum">Password needs to have at least one letter A-Z and one number</string>
 
     <!-- Locations Activity -->
+    
     <string name="title_activity_locations">Locations</string>
     <string name="new_location">New location</string>
     <string name="my_locations">My Locations</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Settings Activity -->
     
+    <string name="settings_distance_textview">Find locations that are within this distance (kilometers)</string>
+    <string name="settings_distance">Distance</string>
 </resources>

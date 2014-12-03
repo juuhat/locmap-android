@@ -46,7 +46,8 @@
             android:layout_weight="0.5"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/action_settings" />
+            android:text="@string/action_settings"
+            android:onClick="btnMainSettings" />
     </LinearLayout>
 
 </LinearLayout>
