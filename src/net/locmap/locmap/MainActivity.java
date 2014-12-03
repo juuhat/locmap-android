@@ -1,9 +1,5 @@
 package net.locmap.locmap;
 
-import java.util.ArrayList;
-
-import net.locmap.locmap.RegisterActivity.Register;
-import net.locmap.locmap.models.Location;
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
 import net.locmap.locmap.utils.UIFunctions;
@@ -16,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 public class MainActivity extends Activity {
 

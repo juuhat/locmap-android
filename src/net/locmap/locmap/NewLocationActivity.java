@@ -2,9 +2,9 @@ package net.locmap.locmap;
 
 import java.io.File;
 
+import net.locmap.locmap.models.LocationModel;
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
-import net.locmap.locmap.utils.UIFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +37,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 /**
  * Activity for creating new locations
@@ -52,10 +51,10 @@ public class NewLocationActivity extends Activity implements
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderApi locationProvider;
     private LocationRequest locationRequest;
-	private Location currentLocation;
+	private Location currentLocation; //gps coords
 	private Uri photoUri;
 	private File image;
-	private net.locmap.locmap.models.Location createdLocation;
+	private LocationModel createdLocation;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -285,7 +284,7 @@ public class NewLocationActivity extends Activity implements
 	 * Starts showLocation activity with given location
 	 * @param location
 	 */
-	private void startShowLocationActivity(net.locmap.locmap.models.Location location) {
+	private void startShowLocationActivity(LocationModel location) {
 		Intent intent = new Intent(this, ShowLocationActivity.class);
 		intent.putExtra("location", location);	
 		startActivity(intent);
@@ -339,7 +338,7 @@ public class NewLocationActivity extends Activity implements
 		@Override
 		protected void onPostExecute(Response res) {			
 			if (res.getStatusCode() == 200) {
-				createdLocation = new net.locmap.locmap.models.Location(res.getBody());
+				createdLocation = new LocationModel(res.getBody());
 				
 				//If image is taken start upload
 				if (image != null) {

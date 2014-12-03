@@ -2,8 +2,8 @@ package net.locmap.locmap;
 
 import java.util.ArrayList;
 
-import net.locmap.locmap.models.Location;
-import net.locmap.locmap.models.User;
+import net.locmap.locmap.models.LocationModel;
+import net.locmap.locmap.models.UserModel;
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
 import net.locmap.locmap.utils.UIFunctions;
@@ -20,7 +20,7 @@ import android.widget.ListView;
 public class LocationsActivity extends Activity {
 	private ListView listUserLocations;
 	private ArrayAdapter<String> listAdapter; 
-	private User user;
+	private UserModel user;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +42,19 @@ public class LocationsActivity extends Activity {
 	 * Starts showLocation activity with given location
 	 * @param location
 	 */
-	private void startShowLocationActivity(Location location) {
+	private void startShowLocationActivity(LocationModel location) {
 		Intent intent = new Intent(this, ShowLocationActivity.class);
 		intent.putExtra("location", location);	
+		startActivity(intent);
+	}
+	
+	
+	/**
+	 * Click event for starting NewLocationActity
+	 * @param view
+	 */
+	public void btnLocationsNew(View view) {
+		Intent intent = new Intent(this, NewLocationActivity.class);
 		startActivity(intent);
 	}
 	
@@ -54,7 +64,7 @@ public class LocationsActivity extends Activity {
 	 */
 	private void fillUserLocations() {
 		ArrayList<String> userLocations = new ArrayList<String>();
-		for (Location loc : this.user.getLocations()) {
+		for (LocationModel loc : this.user.getLocations()) {
 		    userLocations.add(loc.getTitle());
 		}
 		
@@ -64,7 +74,8 @@ public class LocationsActivity extends Activity {
 	    listUserLocations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startShowLocationActivity(user.getLocations().get(position));
+				new GetLocation().execute(user.getLocations().get(position).getId());
+				//startShowLocationActivity(user.getLocations().get(position));
 			}
 		});
 	}
@@ -84,10 +95,26 @@ public class LocationsActivity extends Activity {
 		@Override
 		protected void onPostExecute(Response res) {
 			if (res.getStatusCode() == 200) {
-				user = new User(res.getBody());
+				user = new UserModel(res.getBody());
 				fillUserLocations();
 			}
 		}
+	}
+	
+	public class GetLocation extends AsyncTask<String, Void, Response> {
+		@Override
+		protected Response doInBackground(String... params) {
+			return Network.Get(Network.locationsUrl + params[0]);
+		}
+		
+		@Override
+		protected void onPostExecute(Response res) {
+			if (res.getStatusCode() == 200) {
+				LocationModel loc = new LocationModel(res.getBody());
+				startShowLocationActivity(loc);
+			}
+		}
+		
 	}
 	
 }

@@ -3,6 +3,7 @@ package net.locmap.locmap.models;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +17,7 @@ import android.util.Log;
  * 
  * @author Juuso Hatakka
  */
-public class Location implements Parcelable {
+public class LocationModel implements Parcelable {
 	private String id;
 	private String title;
 	private String description;
@@ -26,7 +27,7 @@ public class Location implements Parcelable {
 	private Date updated;
 	private Date created;
 
-	public Location() {
+	public LocationModel() {
 		this.id = "";
 		this.title = "";
 		this.description = "";
@@ -37,7 +38,7 @@ public class Location implements Parcelable {
 		this.updated = new Date();
 	}
 
-	public Location(String id, String title, String description,
+	public LocationModel(String id, String title, String description,
 			float latitude, float longitude, ArrayList<String> images,
 			Date updated, Date created) {
 		this.id = id;
@@ -54,18 +55,24 @@ public class Location implements Parcelable {
 	 * Constructor using JSON String
 	 * @param json
 	 */
-	public Location(String json) {
+	public LocationModel(String json) {
 		try {
 			JSONObject jsonObj = new JSONObject(json);
-			Log.e("json", json);
 			this.id = jsonObj.getString("_id");
 			this.title = jsonObj.getString("title");
 			this.description = jsonObj.getString("description");
 			this.latitude = (float) jsonObj.getDouble("latitude");
 			this.longitude = (float) jsonObj.getDouble("longitude");
 			
-			//TODO get values from json
 			this.images = new ArrayList<String>();
+			JSONArray jsonImages = jsonObj.optJSONArray("images");
+			if (jsonImages != null) {
+				for (int i = 0; i < jsonImages.length(); i++) {
+					this.images.add(jsonImages.getString(i));
+				}
+			}
+			
+			//TODO get values from json
 			this.created = new Date();
 			this.updated = new Date();
 			
@@ -144,7 +151,7 @@ public class Location implements Parcelable {
 	 * Constructor using Parcel data
 	 * @param in
 	 */
-	public Location(Parcel in) {
+	public LocationModel(Parcel in) {
 		this.id = in.readString();
 		this.title = in.readString();
 		this.description = in.readString();
@@ -174,13 +181,13 @@ public class Location implements Parcelable {
 		return 0;
 	}
 	
-	public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() {
-		public Location createFromParcel(Parcel in) {
-			return new Location(in);
+	public static final Parcelable.Creator<LocationModel> CREATOR = new Parcelable.Creator<LocationModel>() {
+		public LocationModel createFromParcel(Parcel in) {
+			return new LocationModel(in);
 		}
 
-		public Location[] newArray(int size) {
-			return new Location[size];
+		public LocationModel[] newArray(int size) {
+			return new LocationModel[size];
 		}
 	};
 
