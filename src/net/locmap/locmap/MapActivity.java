@@ -1,8 +1,13 @@
 package net.locmap.locmap;
 
+import java.util.ArrayList;
+
+import net.locmap.locmap.models.LocationModel;
+
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
@@ -16,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends Activity implements
 	GoogleApiClient.ConnectionCallbacks,
@@ -27,22 +33,45 @@ public class MapActivity extends Activity implements
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderApi locationProvider;
     private LocationRequest locationRequest;
+    private ArrayList<LocationModel> locations;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 		
+		this.locations = getIntent().getExtras().getParcelableArrayList("locations");
+		
 		// Check Google Play availability status
 		if (serviceAvailable()) {
 			initGPS();
 			initMap();
+			
+			if (this.locations != null) {
+				setMarkers();
+			}
+			
 		}
 	}
 	
-	// is Google Play Services running
+	
+	/**
+	 * Add markers to map
+	 */
+	private void setMarkers() {
+		for (LocationModel i : this.locations) {
+			myMap.addMarker(new MarkerOptions()
+				.position(new LatLng(i.getLatitude(), i.getLongitude()))
+				.title(i.getTitle()));
+		}
+	}
+	
+	
+	/**
+	 * Check if Google Play Services is running
+	 * @return true/false
+	 */
 	private boolean serviceAvailable() {
-		// Getting Google Play availability status
 		int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (errorCode != ConnectionResult.SUCCESS) {
 			GooglePlayServicesUtil.getErrorDialog(errorCode, this, 0).show();
