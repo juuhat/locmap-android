@@ -22,8 +22,31 @@ public class UIFunctions {
 	private static final String pwKey = "password";
 	private static final String usernameKey = "username";
 	private static final String idKey = "id";
+	private static final String distanceKey = "distance";
+	private static int defaultDistance = 300;
 	
 	
+	/**
+	 * Sets distance from within locations are fetched 
+	 * @param current Activity
+	 * @param distance Distance in kilometers
+	 */
+	public static void setDistance(Activity current, int distance) {
+		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putInt(distanceKey, distance);
+		editor.commit();
+	}
+	
+	/**
+	 * Gets maximum distance where to look for locations
+	 * @param current Activity
+	 * @return Distance in kilometers. -1 if preference not set
+	 */
+	public static int getDistance(Activity current) {
+		SharedPreferences sharedPref = current.getPreferences(Context.MODE_PRIVATE);
+		return sharedPref.getInt(distanceKey, -1);
+	}
 	/**
 	 * Puts modal dialog to display. Only button available is OK which closes dialog
 	 * @param msg Message to show in dialog
@@ -171,7 +194,6 @@ public class UIFunctions {
 	 */
 	public static void showToast(Activity activity, String msg) {
 		Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
-		
 	}
 
 
@@ -183,5 +205,14 @@ public class UIFunctions {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
 		sharedPref.edit().remove(tokenKey).commit();
 		
+	}
+
+	/**
+	 * Inits max distance in preferences if it is not set.
+	 * @param current Activity
+	 */
+	public static void initDistance(Activity current) {
+		if (getDistance(current) <= 0)
+			setDistance(current, defaultDistance);
 	}
 }
