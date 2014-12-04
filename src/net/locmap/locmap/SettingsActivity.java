@@ -32,7 +32,7 @@ public class SettingsActivity extends Activity {
 		txtDistance = (TextView) findViewById(R.id.txtSettingsDistance);
 		sbDistance = (SeekBar) findViewById(R.id.sbSettingsDistance);
 		sbDistance.setMax(maxDistance - 1);
-		refreshDistance(UIFunctions.getDistance(this));
+		refreshDistance(UIFunctions.getDistance(this), true);
 		
 		// bind seekbar to textview
 		sbDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -72,14 +72,19 @@ public class SettingsActivity extends Activity {
 	}
 	
 	/**
-	 * "bind" EditText and seekbar to same value
-	 * @param _value Set both indicators to this value. If value < 0, does nothing. If value > maxDistance, set value to maxDistance
+	 * "bind" TextView and SeekBar to same value
+	 * @param _value Set both indicators to this value. If value < 0, sets TV to 1. If value > maxDistance, set value to maxDistance
 	 */
 	private void refreshDistance(int _value) {
 		int value = _value;
 		if (value < 1) value = 1;
 		else if (value > maxDistance) value = maxDistance;
 		txtDistance.setText("" + value );
+	}
+	
+	private void refreshDistance(int _value, boolean progress) {
+		refreshDistance(_value);
+		sbDistance.setProgress(_value - 1);
 	}
 	
 	
