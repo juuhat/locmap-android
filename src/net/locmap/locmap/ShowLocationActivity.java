@@ -2,15 +2,18 @@ package net.locmap.locmap;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 import net.locmap.locmap.models.LocationModel;
 import net.locmap.locmap.utils.Network;
+import net.locmap.locmap.utils.UIFunctions;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +39,17 @@ public class ShowLocationActivity extends Activity {
 				new DownloadImage().execute(Network.imagesUrl + i);
 			}
 		}
-
+		
+		LinearLayout buttons = (LinearLayout) findViewById(R.id.layoutShowLocationButtons);
+		// show update/delete buttons if location owner opens activity
+		ArrayList<String> ownerTemp = this.location.getOwners();
+		String locIdTemp = UIFunctions.getId(this);
+		buttons.setVisibility(LinearLayout.INVISIBLE);
+		
+		for (String ownerID : ownerTemp) {
+			if (ownerID.equals(locIdTemp))
+				buttons.setVisibility(LinearLayout.VISIBLE);
+		}
 	}
 	
 	private void updateTextViews() {
@@ -45,6 +58,20 @@ public class ShowLocationActivity extends Activity {
 		
 		title.setText(location.getTitle());
 		description.setText(location.getDescription());
+	}
+	
+	/**
+	 * Click event for location edit
+	 */
+	protected void btnShowLocationUpdate(View v) {
+		// TODO
+	}
+	
+	/**
+	 * Click event for location delete
+	 */
+	protected void btnShowLocationDelete(View v) {
+		// TODO
 	}
 	
 	private void addImage(Bitmap bitmap) {

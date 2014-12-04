@@ -23,6 +23,10 @@
     <string name="logout">Log out</string>
     <string name="logged_out">Logged out</string>
 
+    <!-- Show Location Activity -->
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    
     <!-- New Location Activity -->
 
     <string name="title_activity_location">New location</string>

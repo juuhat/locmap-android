@@ -1,18 +1,10 @@
 package net.locmap.locmap;
 
-import net.locmap.locmap.utils.InputFilterMinMax;
 import net.locmap.locmap.utils.UIFunctions;
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnKeyListener;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -67,10 +59,6 @@ public class SettingsActivity extends Activity {
 	}
 	
 	
-	private Activity getActivity() {
-		return this;
-	}
-	
 	/**
 	 * "bind" TextView and SeekBar to same value
 	 * @param _value Set both indicators to this value. If value < 0, sets TV to 1. If value > maxDistance, set value to maxDistance
@@ -81,6 +69,7 @@ public class SettingsActivity extends Activity {
 		else if (value > maxDistance) value = maxDistance;
 		txtDistance.setText("" + value );
 	}
+	
 	
 	private void refreshDistance(int _value, boolean progress) {
 		refreshDistance(_value);
