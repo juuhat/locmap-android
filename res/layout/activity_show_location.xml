@@ -2,46 +2,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}">
+    tools:context="${relativePackage}.${activityClass}" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:orientation="vertical" >
+        android:paddingRight="16dp" >
 
         <TextView
             android:id="@+id/txtShowLocationTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
             android:gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-        
+
         <TextView
             android:id="@+id/txtShowLocationDescription"
-            android:paddingTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium Textda sd asd as das dasdas dsa das das das dsajl kdasj dlaskddl aksdasl "
+            android:paddingTop="20dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <HorizontalScrollView
             android:id="@+id/scrollShowLocationImages"
-            android:paddingTop="30dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp" >
 
             <LinearLayout
                 android:id="@+id/layoutShowLocationImages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >    
+                android:orientation="horizontal" >
             </LinearLayout>
-            
         </HorizontalScrollView>
-        
+
+        <!-- Buttons for location owner. Invisible by default -->
+
+        <LinearLayout
+            android:id="@+id/layoutShowLocationButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="invisible" >
+
+            <Button
+                android:id="@+id/btnShowLocationUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="btnShowLocationUpdate"
+                android:padding="6dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/update" />
+            
+            <Button
+                android:id="@+id/btnShowLocationDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="btnShowLocationDelete"
+                android:padding="6dp"
+                android:layout_marginLeft="5dp"
+                android:text="@string/delete" />
+            
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
