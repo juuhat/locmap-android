@@ -34,11 +34,12 @@ public class SettingsActivity extends Activity {
 		sbDistance.setMax(maxDistance - 1);
 		refreshDistance(UIFunctions.getDistance(this));
 		
+		// bind seekbar to textview
 		sbDistance.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				UIFunctions.showToast(getActivity(), "Stop tracking");
+				saveDistance(seekBar.getProgress());
 			}
 			
 			@Override
@@ -57,6 +58,15 @@ public class SettingsActivity extends Activity {
 	}
 
 	
+	/**
+	 * Saves distance to sharedpref
+	 * @param value
+	 */
+	private void saveDistance(int value) {
+		UIFunctions.setDistance(this, value);
+	}
+	
+	
 	private Activity getActivity() {
 		return this;
 	}
@@ -65,7 +75,10 @@ public class SettingsActivity extends Activity {
 	 * "bind" EditText and seekbar to same value
 	 * @param _value Set both indicators to this value. If value < 0, does nothing. If value > maxDistance, set value to maxDistance
 	 */
-	private void refreshDistance(int value) {
+	private void refreshDistance(int _value) {
+		int value = _value;
+		if (value < 1) value = 1;
+		else if (value > maxDistance) value = maxDistance;
 		txtDistance.setText("" + value );
 	}
 	
