@@ -15,10 +15,11 @@ import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 public class SettingsActivity extends Activity {
 
-	private EditText txtDistance;
+	private TextView txtDistance;
 	private SeekBar sbDistance;
 	private final int maxDistance = 1000; // slider/edittext cannot be set to a greater value than this
 	
@@ -28,7 +29,7 @@ public class SettingsActivity extends Activity {
 		setContentView(R.layout.activity_settings);
 		
 		// init distance textfield and slider
-		txtDistance = (EditText) findViewById(R.id.txtSettingsDistance);
+		txtDistance = (TextView) findViewById(R.id.txtSettingsDistance);
 		sbDistance = (SeekBar) findViewById(R.id.sbSettingsDistance);
 		sbDistance.setMax(maxDistance - 1);
 		refreshDistance(UIFunctions.getDistance(this));
@@ -37,7 +38,7 @@ public class SettingsActivity extends Activity {
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				
+				UIFunctions.showToast(getActivity(), "Stop tracking");
 			}
 			
 			@Override
@@ -48,35 +49,24 @@ public class SettingsActivity extends Activity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				refreshDistance(progress +1);
-			}
-		});
-		txtDistance.setFilters(new InputFilter[]{ new InputFilterMinMax(1, maxDistance)});
-		txtDistance.setOnKeyListener(new OnKeyListener() {
-			
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				refreshDistance(Integer.parseInt(txtDistance.getText().toString()));
-				return true;
+				if (fromUser)
+					refreshDistance(progress +1);
 			}
 		});
 		
 	}
 
 	
+	private Activity getActivity() {
+		return this;
+	}
+	
 	/**
 	 * "bind" EditText and seekbar to same value
 	 * @param _value Set both indicators to this value. If value < 0, does nothing. If value > maxDistance, set value to maxDistance
 	 */
-	private void refreshDistance(int _value) {
-		int value = _value;
-		if (value <= 0)
-			return;
-		if (value >  maxDistance)
-			value = maxDistance;
-		txtDistance.setText("" + value);
-		sbDistance.setProgress(value - 1);
-	
+	private void refreshDistance(int value) {
+		txtDistance.setText("" + value );
 	}
 	
 	
