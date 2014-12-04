@@ -2,6 +2,13 @@ package net.locmap.locmap;
 
 import java.util.ArrayList;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
 import net.locmap.locmap.models.LocationModel;
 import net.locmap.locmap.models.UserModel;
 import net.locmap.locmap.utils.Network;
@@ -10,17 +17,28 @@ import net.locmap.locmap.utils.UIFunctions;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class LocationsActivity extends Activity {
+public class LocationsActivity extends Activity implements
+	GoogleApiClient.ConnectionCallbacks,
+	GoogleApiClient.OnConnectionFailedListener,
+	LocationListener {
+	
 	private ListView listUserLocations;
 	private ArrayAdapter<String> listAdapter; 
 	private UserModel user;
+	
+    private GoogleApiClient googleApiClient;
+    private FusedLocationProviderApi locationProvider;
+    private LocationRequest locationRequest;
+	private Location currentLocation; //gps coords
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +53,16 @@ public class LocationsActivity extends Activity {
 		} else {
 			//TODO show 'Log in' text to user?
 		}
+		
+		//build googleApiClient with locationServices
+        googleApiClient = new GoogleApiClient.Builder(this)
+        .addApi(LocationServices.API)
+        .addConnectionCallbacks(this)
+        .addOnConnectionFailedListener(this)
+        .build();
+		
+        googleApiClient.connect();
+		
 	}
 	
 	
@@ -101,6 +129,11 @@ public class LocationsActivity extends Activity {
 		}
 	}
 	
+	
+	/**
+	 * AsyncTask for getting getting single location
+	 * 1. parameter: Location's ObjectId
+	 */
 	public class GetLocation extends AsyncTask<String, Void, Response> {
 		@Override
 		protected Response doInBackground(String... params) {
@@ -114,6 +147,72 @@ public class LocationsActivity extends Activity {
 				startShowLocationActivity(loc);
 			}
 		}
+		
+	}
+	
+	
+	/**
+	 * AsyncTask for getting locations near user
+	 */
+	public class GetNearLocations extends AsyncTask<String, Void, Response> {
+		@Override
+		protected Response doInBackground(String... params) {
+			//TODO read dist from user's preferences
+			return Network.Get("http://api.locmap.net/v1/locations" + 
+						"?lat=" + currentLocation.getLatitude() +
+						"&lon=" + currentLocation.getLongitude() +
+						"&dist=40");
+		}
+		
+		@Override
+		protected void onPostExecute(Response res) {
+			//TODO parse results
+			Log.e("res", res.getBody());
+		}
+		
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		if (location != null) {
+			currentLocation = location;
+		}
+	}
+
+
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	/**
+	 * Called when Google play services is connected
+	 */
+	@Override
+	public void onConnected(Bundle arg0) {
+		 locationProvider = LocationServices.FusedLocationApi;
+		 Location lastLocation = locationProvider.getLastLocation(googleApiClient);
+		 
+		 if (lastLocation != null) {
+			 currentLocation = lastLocation;
+		 }
+		 
+		//Set up continuous location updates
+		 locationRequest = LocationRequest.create();
+		 locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		 locationRequest.setInterval(1000); //milliseconds
+		 locationProvider.requestLocationUpdates(googleApiClient, locationRequest, this);
+		 
+		 new GetNearLocations().execute();
+		 
+	}
+
+
+	@Override
+	public void onConnectionSuspended(int arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 	
