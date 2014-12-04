@@ -18,11 +18,13 @@ import android.util.Log;
  * @author Juuso Hatakka
  */
 public class LocationModel implements Parcelable {
+
 	private String id;
 	private String title;
 	private String description;
 	private float latitude;
 	private float longitude;
+	private ArrayList<String> owners;
 	private ArrayList<String> images;
 	private Date updated;
 	private Date created;
@@ -33,19 +35,21 @@ public class LocationModel implements Parcelable {
 		this.description = "";
 		this.latitude = 0f;
 		this.longitude = 0f;
+		this.owners = new ArrayList<String>();
 		this.images = new ArrayList<String>();
 		this.created = new Date();
 		this.updated = new Date();
 	}
 
 	public LocationModel(String id, String title, String description,
-			float latitude, float longitude, ArrayList<String> images,
+			float latitude, float longitude, ArrayList<String> owners ,ArrayList<String> images,
 			Date updated, Date created) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.owners = owners;
 		this.images = images;
 		this.updated = updated;
 		this.created = created;
@@ -64,6 +68,14 @@ public class LocationModel implements Parcelable {
 			this.latitude = (float) jsonObj.getDouble("latitude");
 			this.longitude = (float) jsonObj.getDouble("longitude");
 			
+			this.owners = new ArrayList<String>();
+			JSONArray jsonOwners = jsonObj.optJSONArray("owners");
+			if (jsonOwners != null) {
+				for (int i = 0; i < jsonOwners.length(); ++i) {
+					this.owners.add(jsonOwners.getString(i));
+				}
+			}
+			
 			this.images = new ArrayList<String>();
 			JSONArray jsonImages = jsonObj.optJSONArray("images");
 			if (jsonImages != null) {
@@ -79,6 +91,14 @@ public class LocationModel implements Parcelable {
 		} catch (JSONException e) {
 			Log.e("e", e.toString());
 		}
+	}
+
+	public ArrayList<String> getOwners() {
+		return owners;
+	}
+
+	public void setOwners(ArrayList<String> owners) {
+		this.owners = owners;
 	}
 
 	public String getId() {
@@ -157,6 +177,8 @@ public class LocationModel implements Parcelable {
 		this.description = in.readString();
 		this.latitude = in.readFloat();
 		this.longitude = in.readFloat();
+		this.owners= new ArrayList<String>();
+		in.readList(this.owners, String.class.getClassLoader());
 		this.images = new ArrayList<String>();
 		in.readList(this.images, String.class.getClassLoader());
 		this.updated = new Date(in.readLong());
@@ -171,6 +193,7 @@ public class LocationModel implements Parcelable {
 		dest.writeString(this.description);
 		dest.writeFloat(this.latitude);
 		dest.writeFloat(this.longitude);
+		dest.writeList(this.owners);
 		dest.writeList(this.images);
 		dest.writeLong(this.updated.getTime());
 		dest.writeLong(this.created.getTime());
