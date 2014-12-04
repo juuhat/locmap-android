@@ -2,6 +2,10 @@ package net.locmap.locmap;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -32,8 +36,9 @@ public class LocationsActivity extends Activity implements
 	LocationListener {
 	
 	private ListView listUserLocations;
-	private ArrayAdapter<String> listAdapter; 
+	private ListView listNearLocations;
 	private UserModel user;
+	private ArrayList<LocationModel> nearLocations;
 	
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderApi locationProvider;
@@ -46,7 +51,8 @@ public class LocationsActivity extends Activity implements
 		setContentView(R.layout.activity_locations);
 		
 		this.listUserLocations = (ListView) findViewById(R.id.listLocationsUsers);
- 
+		this.listNearLocations = (ListView) findViewById(R.id.listLocationsNear);
+		
 		String userId = UIFunctions.getId(this);
 		if (userId != null) {
 			new GetUserLocations().execute(userId);
@@ -91,19 +97,39 @@ public class LocationsActivity extends Activity implements
 	 * Set up "My locations" listView
 	 */
 	private void fillUserLocations() {
-		ArrayList<String> userLocations = new ArrayList<String>();
+		ArrayList<String> titles = new ArrayList<String>();
 		for (LocationModel loc : this.user.getLocations()) {
-		    userLocations.add(loc.getTitle());
+		    titles.add(loc.getTitle());
 		}
 		
-	    listAdapter = new ArrayAdapter<String>(this, R.layout.list_text_row, userLocations);
-	    listUserLocations.setAdapter( listAdapter );
+		ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, R.layout.list_text_row, titles);
+	    listUserLocations.setAdapter(listAdapter);
 	    
 	    listUserLocations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				new GetLocation().execute(user.getLocations().get(position).getId());
-				//startShowLocationActivity(user.getLocations().get(position));
+			}
+		});
+	}
+	
+	
+	/**
+	 * Set up "Near locations" listView 
+	 */
+	private void fillNearLocations() {
+		ArrayList<String> titles = new ArrayList<String>();
+		for (LocationModel loc : this.nearLocations) {
+		    titles.add(loc.getTitle());
+		}
+
+	    ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, R.layout.list_text_row, titles);
+	    listNearLocations.setAdapter(listAdapter);
+	    
+	    listNearLocations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				startShowLocationActivity(nearLocations.get(position));
 			}
 		});
 	}
@@ -166,8 +192,24 @@ public class LocationsActivity extends Activity implements
 		
 		@Override
 		protected void onPostExecute(Response res) {
-			//TODO parse results
-			Log.e("res", res.getBody());
+			if (res.getStatusCode() == 200) {
+				try {
+					JSONArray jsonArr = new JSONArray(res.getBody());
+					nearLocations = new ArrayList<LocationModel>();
+					if (jsonArr != null) {
+						for (int i = 0; i < jsonArr.length(); i++) {
+							nearLocations.add(new LocationModel(jsonArr.getString(i)));
+						}
+						
+						fillNearLocations();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				//TODO show error to user
+			}
 		}
 		
 	}
