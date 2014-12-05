@@ -5,6 +5,7 @@ import java.io.File;
 import net.locmap.locmap.models.LocationModel;
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.Response;
+import net.locmap.locmap.utils.UIFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -41,6 +43,7 @@ import android.widget.ProgressBar;
 /**
  * Activity for creating new locations
  * @author Juuso Hatakka
+ * @author Janne Heikkinen
  */
 
 public class NewLocationActivity extends Activity implements
@@ -55,6 +58,13 @@ public class NewLocationActivity extends Activity implements
 	private Uri photoUri;
 	private File image;
 	private LocationModel createdLocation;
+	private LocationModel editLocation;
+	private boolean imgChanged;
+	
+	private EditText title;
+	private EditText description;
+	private EditText latitude; 
+	private EditText longitude;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,21 +78,61 @@ public class NewLocationActivity extends Activity implements
         .addOnConnectionFailedListener(this)
         .build();
 		
+        title = (EditText) findViewById(R.id.editNewLocationTitle);
+        description = (EditText) findViewById(R.id.editNewLocationDescription);
+        latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
+        longitude = (EditText) findViewById(R.id.editNewLocationLongitude);
+
+        
         googleApiClient.connect();
 		
         image = null;
+        
+        // if activity opened in edit purposes
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+        	imgChanged = false;
+        	setEditLocation(extras);
+        }
+               
 	}
 	
 	
+	/**
+	 * Fills textfields with location info.
+	 * Changes click event for create-button
+	 * @param extras
+	 */
+	private void setEditLocation(Bundle extras) {
+		this.editLocation = (LocationModel) extras.getParcelable("location");
+		
+		title.setText(editLocation.getTitle());
+		description.setText(editLocation.getDescription());
+	
+		latitude.setVisibility(EditText.INVISIBLE);
+		longitude.setVisibility(EditText.INVISIBLE);
+		
+		Button btnCreate = (Button) findViewById(R.id.btnNewLocationCreate);
+		btnCreate.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String[] params =  {title.getText().toString(), description.getText().toString(),
+						latitude.getText().toString(), longitude.getText().toString()};
+
+	        	changeProgressBarVisibility(true);
+				new UpdateLocation().execute(params);
+			}
+		});
+	}
+
+
 	/**
 	 * Click event for coordinates button
 	 * Sets latitude and longitude fields to most recent values
 	 * @param view
 	 */
 	public void btnNewLocationCoordinatesClicked(View view) {
-
-		EditText latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
-		EditText longitude = (EditText) findViewById(R.id.editNewLocationLongitude);
 		
 		if (currentLocation != null) {
 			latitude.setText(Double.toString(currentLocation.getLatitude()));
@@ -135,11 +185,6 @@ public class NewLocationActivity extends Activity implements
 		
 		changeProgressBarVisibility(true);
 		
-		EditText title = (EditText) findViewById(R.id.editNewLocationTitle);
-		EditText description = (EditText) findViewById(R.id.editNewLocationDescription);
-		EditText latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
-		EditText longitude = (EditText) findViewById(R.id.editNewLocationLongitude);
-		
 		String[] params = {title.getText().toString(), description.getText().toString(),
 							latitude.getText().toString(), longitude.getText().toString()};
 		
@@ -179,6 +224,7 @@ public class NewLocationActivity extends Activity implements
 				return;
 			}
 	    	
+	    	imgChanged = true;
 	        Bundle extras = data.getExtras();
 	        Bitmap thumb = (Bitmap) extras.get("data");
 	        ImageView imgView = (ImageView) findViewById(R.id.imgNewLocationPreview);
@@ -298,6 +344,55 @@ public class NewLocationActivity extends Activity implements
 		return this;
 	}
 	
+	
+	/**
+	 * Sends HTTP PUT -request to API.
+	 * Updates location details and image.
+	 * 
+	 * Takes an String array as parameter, which contains:
+	 * 
+	 * 1. parameter: Title
+	 * 2. parameter: Description
+	 */
+	public class UpdateLocation extends AsyncTask<String, Void, Response> {
+
+		@Override
+		protected Response doInBackground(String... params) {
+			if (params.length < 4)
+				this.cancel(true);
+			
+			String json = "";
+			JSONObject jsonObj = new JSONObject();
+
+			try {
+				jsonObj.accumulate("title", params[0]);
+				jsonObj.accumulate("description", params[1]);
+				json = jsonObj.toString();
+			} catch (JSONException e) {
+				Log.d("JSON convert", "String to JSON fail @ UpdateLocation");
+			}
+			return Network.Put(Network.locationsUrl + "/" + editLocation.getId(), json, UIFunctions.getToken(getActivity()));
+		}
+		
+		@Override
+		protected void onPostExecute(Response res) {
+			if (res.getStatusCode() == 200) {
+				createdLocation = new LocationModel(res.getBody());
+				if (imgChanged) {
+					new UploadImage().execute(createdLocation.getId());
+					UIFunctions.showToast(getActivity(), getString(R.string.location_updated));
+					getActivity().finish();
+				}
+				else
+					changeProgressBarVisibility(false);
+			}
+			else {
+				UIFunctions.showOKDialog(res.getBody(), getActivity());
+				changeProgressBarVisibility(false);
+			}
+		}
+		
+	}
 	
 	/**
 	 * Async task for creating location

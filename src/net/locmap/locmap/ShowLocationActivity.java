@@ -8,6 +8,7 @@ import net.locmap.locmap.models.LocationModel;
 import net.locmap.locmap.utils.Network;
 import net.locmap.locmap.utils.UIFunctions;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -63,14 +64,16 @@ public class ShowLocationActivity extends Activity {
 	/**
 	 * Click event for location edit
 	 */
-	protected void btnShowLocationUpdate(View v) {
-		// TODO
+	public void btnShowLocationUpdate(View v) {
+		Intent intent = new Intent(this, NewLocationActivity.class);
+		intent.putExtra("location", this.location);
+		startActivity(intent);
 	}
 	
 	/**
 	 * Click event for location delete
 	 */
-	protected void btnShowLocationDelete(View v) {
+	public void btnShowLocationDelete(View v) {
 		// TODO
 	}
 	

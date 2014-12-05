@@ -12,6 +12,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -154,6 +155,41 @@ public class Network {
 
 	}
 
+
+	public static Response Put(String url, String json, String token) {
+		Response res = new Response();
+		InputStream inputstream = null;
+
+		try {
+			HttpClient client = new DefaultHttpClient();
+			HttpPut put = new HttpPut(locationsUrl);
+			
+			put.setHeader("Authorization", "Bearer " + token);
+			put.setHeader("Accept", "application/json");
+			put.setHeader("Content-type", "application/json");
+			
+			HttpResponse response = client.execute(put);
+			
+			String body = "";
+			inputstream = response.getEntity().getContent();
+			if (inputstream != null)
+				body = convertInputStreamToString(inputstream);
+
+			res.setHeaders(response.getAllHeaders());
+			res.setStatusCode(response.getStatusLine().getStatusCode());
+			res.setBody(body);
+			
+			
+		} catch (ClientProtocolException e) {
+			Log.e("ClienprotocolException in PUTAPI", e.getMessage());
+		} catch (IOException e) {
+			Log.e("IOException in PUTAPI", e.getMessage());
+		}
+		return res;
+	}
+
+	
+	
 	/**
 	 * Send HTTP GET request
 	 * @param url

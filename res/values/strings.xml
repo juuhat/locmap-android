@@ -24,6 +24,7 @@
     <string name="logged_out">Logged out</string>
 
     <!-- Show Location Activity -->
+    
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     
@@ -39,6 +40,7 @@
     <string name="cancel">Cancel</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
+    <string name="location_updated">Location updated</string>
 
     <!-- Log in Activity -->
 
