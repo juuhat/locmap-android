@@ -71,6 +71,7 @@
     <string name="new_location">New location</string>
     <string name="my_locations">My Locations</string>
     <string name="near_locations">Locations near me</string>
+    <string name="show_on_map">Show on map</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Settings Activity -->
