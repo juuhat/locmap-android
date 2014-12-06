@@ -63,8 +63,8 @@ public class LocationModel implements Parcelable {
 		try {
 			JSONObject jsonObj = new JSONObject(json);
 			this.id = jsonObj.getString("_id");
-			this.title = jsonObj.getString("title");
-			this.description = jsonObj.getString("description");
+			this.title = jsonObj.optString("title");
+			this.description = jsonObj.optString("description");
 			this.latitude = (float) jsonObj.getDouble("latitude");
 			this.longitude = (float) jsonObj.getDouble("longitude");
 			
@@ -89,7 +89,7 @@ public class LocationModel implements Parcelable {
 			this.updated = new Date();
 			
 		} catch (JSONException e) {
-			Log.e("e", e.toString());
+			Log.e("LocationModel", e.toString());
 		}
 	}
 
