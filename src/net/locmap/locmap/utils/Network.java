@@ -159,25 +159,27 @@ public class Network {
 	public static Response Put(String url, String json, String token) {
 		Response res = new Response();
 		InputStream inputstream = null;
-
+		
 		try {
 			HttpClient client = new DefaultHttpClient();
-			HttpPut put = new HttpPut(locationsUrl);
+			HttpPut put = new HttpPut(url);
 			
+			StringEntity se = new StringEntity(json);
 			put.setHeader("Authorization", "Bearer " + token);
 			put.setHeader("Accept", "application/json");
 			put.setHeader("Content-type", "application/json");
-			
+			put.setEntity(se);
+		
 			HttpResponse response = client.execute(put);
 			
 			String body = "";
 			inputstream = response.getEntity().getContent();
 			if (inputstream != null)
 				body = convertInputStreamToString(inputstream);
-
+		
 			res.setHeaders(response.getAllHeaders());
 			res.setStatusCode(response.getStatusLine().getStatusCode());
-			res.setBody(body);
+			res.setBody(json);
 			
 			
 		} catch (ClientProtocolException e) {

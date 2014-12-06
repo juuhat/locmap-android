@@ -61,13 +61,22 @@ public class ShowLocationActivity extends Activity {
 		description.setText(location.getDescription());
 	}
 	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (data.hasExtra("location")) {
+			this.location = (LocationModel) (data.getParcelableExtra("location"));
+		}
+		
+		updateTextViews();
+	}
+	
+	
 	/**
 	 * Click event for location edit
 	 */
 	public void btnShowLocationUpdate(View v) {
 		Intent intent = new Intent(this, NewLocationActivity.class);
 		intent.putExtra("location", this.location);
-		startActivity(intent);
+		startActivityForResult(intent, 0);
 	}
 	
 	/**

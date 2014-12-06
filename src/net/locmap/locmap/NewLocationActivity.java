@@ -82,8 +82,6 @@ public class NewLocationActivity extends Activity implements
         description = (EditText) findViewById(R.id.editNewLocationDescription);
         latitude = (EditText) findViewById(R.id.editNewLocationLatitude);
         longitude = (EditText) findViewById(R.id.editNewLocationLongitude);
-
-        
         googleApiClient.connect();
 		
         image = null;
@@ -117,9 +115,10 @@ public class NewLocationActivity extends Activity implements
 			
 			@Override
 			public void onClick(View v) {
-				String[] params =  {title.getText().toString(), description.getText().toString(),
-						latitude.getText().toString(), longitude.getText().toString()};
+				String[] params =  {title.getText().toString(), description.getText().toString()};
 
+				editLocation.setTitle(title.getText().toString());
+				editLocation.setDescription(description.getText().toString());
 	        	changeProgressBarVisibility(true);
 				new UpdateLocation().execute(params);
 			}
@@ -358,7 +357,7 @@ public class NewLocationActivity extends Activity implements
 
 		@Override
 		protected Response doInBackground(String... params) {
-			if (params.length < 4)
+			if (params.length < 2)
 				this.cancel(true);
 			
 			String json = "";
@@ -371,20 +370,23 @@ public class NewLocationActivity extends Activity implements
 			} catch (JSONException e) {
 				Log.d("JSON convert", "String to JSON fail @ UpdateLocation");
 			}
-			return Network.Put(Network.locationsUrl + "/" + editLocation.getId(), json, UIFunctions.getToken(getActivity()));
+			return Network.Put(Network.locationsUrl + editLocation.getId(), json, UIFunctions.getToken(getActivity()));
 		}
 		
 		@Override
 		protected void onPostExecute(Response res) {
 			if (res.getStatusCode() == 200) {
-				createdLocation = new LocationModel(res.getBody());
 				if (imgChanged) {
-					new UploadImage().execute(createdLocation.getId());
-					UIFunctions.showToast(getActivity(), getString(R.string.location_updated));
-					getActivity().finish();
+					new UploadImage().execute(editLocation.getId());
+					
 				}
-				else
-					changeProgressBarVisibility(false);
+				changeProgressBarVisibility(false);
+				UIFunctions.showToast(getActivity(), getString(R.string.location_updated));
+				Intent intent = new Intent();
+				intent.putExtra("location", editLocation);
+				setResult(Activity.RESULT_OK, intent);
+				getActivity().finish();
+					
 			}
 			else {
 				UIFunctions.showOKDialog(res.getBody(), getActivity());
