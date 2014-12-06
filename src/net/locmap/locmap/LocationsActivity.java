@@ -94,6 +94,17 @@ public class LocationsActivity extends Activity implements
 	
 	
 	/**
+	 * Click event for starting MapActivity with near locations as parameter
+	 * @param view
+	 */
+	public void btnLocationsNearMap(View view) {
+		Intent intent = new Intent(this, MapActivity.class);
+		intent.putExtra("locations", nearLocations);	
+		startActivity(intent);
+	}
+	
+	
+	/**
 	 * Set up "My locations" listView
 	 */
 	private void fillUserLocations() {
