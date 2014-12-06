@@ -205,7 +205,8 @@ public class LocationsActivity extends Activity implements
 		protected void onPostExecute(Response res) {
 			if (res.getStatusCode() == 200) {
 				try {
-					JSONArray jsonArr = new JSONArray(res.getBody());
+					JSONObject jsonObj = new JSONObject(res.getBody());
+					JSONArray jsonArr = jsonObj.getJSONArray("locations");
 					nearLocations = new ArrayList<LocationModel>();
 					if (jsonArr != null) {
 						for (int i = 0; i < jsonArr.length(); i++) {
