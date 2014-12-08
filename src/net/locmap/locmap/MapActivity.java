@@ -1,10 +1,12 @@
 package net.locmap.locmap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.locmap.locmap.models.LocationModel;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +21,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends Activity implements
@@ -29,7 +33,7 @@ public class MapActivity extends Activity implements
 	LocationListener {
 
     private GoogleMap myMap;
-    //private ArrayList<Marker> markers;
+    private HashMap<Marker, LocationModel> markers;
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderApi locationProvider;
     private LocationRequest locationRequest;
@@ -59,10 +63,12 @@ public class MapActivity extends Activity implements
 	 * Add markers to map
 	 */
 	private void setMarkers() {
+		this.markers = new HashMap<Marker, LocationModel>();
 		for (LocationModel i : this.locations) {
-			myMap.addMarker(new MarkerOptions()
+			Marker m = myMap.addMarker(new MarkerOptions()
 				.position(new LatLng(i.getLatitude(), i.getLongitude()))
 				.title(i.getTitle()));
+			this.markers.put(m, i);
 		}
 	}
 	
@@ -101,8 +107,30 @@ public class MapActivity extends Activity implements
 
 		// set map type
 		myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		
+		myMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+			
+			@Override
+			public void onInfoWindowClick(Marker marker) {
+				LocationModel loc = markers.get(marker);
+				startShowLocationActivity(loc);
+			}
+		});
+		
 	}
 
+	
+	/**
+	 * Starts showLocation activity with given location
+	 * @param location
+	 */
+	private void startShowLocationActivity(LocationModel location) {
+		Intent intent = new Intent(this, ShowLocationActivity.class);
+		intent.putExtra("location", location);	
+		startActivity(intent);
+	}
+	
+	
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
