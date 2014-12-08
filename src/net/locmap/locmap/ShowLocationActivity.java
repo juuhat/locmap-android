@@ -62,6 +62,9 @@ public class ShowLocationActivity extends Activity {
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_CANCELED)
+			return;
+		
 		if (data.hasExtra("location")) {
 			this.location = (LocationModel) (data.getParcelableExtra("location"));
 		}

@@ -54,7 +54,9 @@ public class LogInActivity extends Activity {
 	 * When returned from register-intent
 	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+		if (resultCode == RESULT_CANCELED)
+			return;
+			
 		// if registered successfully, put email to textfield and clear login data from memory 
 		if (data.hasExtra("email")) {
 			email.setText(data.getStringExtra("email"));
