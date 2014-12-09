@@ -1,5 +1,8 @@
 package net.locmap.locmap.utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import net.locmap.locmap.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -204,7 +207,6 @@ public class UIFunctions {
 	public static void clearToken(Activity current) {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
 		sharedPref.edit().remove(tokenKey).commit();
-		
 	}
 
 	/**
@@ -215,4 +217,19 @@ public class UIFunctions {
 		if (getDistance(current) <= 0)
 			setDistance(current, defaultDistance);
 	}
+	
+	
+	/**
+	 * Parse message contained in API response
+	 * @param json
+	 */
+	public static String parseJsonMessage(String json) {
+		try {
+			JSONObject jsonObj = new JSONObject(json);
+			return jsonObj.getString("message");
+		} catch (JSONException e) {
+			return "Invalid response from API";
+		}
+	}
+	
 }

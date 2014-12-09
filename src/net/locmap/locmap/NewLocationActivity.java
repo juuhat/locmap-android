@@ -182,6 +182,11 @@ public class NewLocationActivity extends Activity implements
 	 */
 	public void btnNewLocationCreate(View view) {
 		
+		if (!Network.isNetworkAvailable(this)) {
+			UIFunctions.showOKDialog(getString(R.string.check_internet), this);
+			return;
+		}
+		
 		changeProgressBarVisibility(true);
 		
 		String[] params = {title.getText().toString(), description.getText().toString(),
@@ -240,7 +245,7 @@ public class NewLocationActivity extends Activity implements
 	public void hideKeyboard (){
 	    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	    if (getCurrentFocus() != null) {
-	        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+	        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	    }
 	}
@@ -389,7 +394,7 @@ public class NewLocationActivity extends Activity implements
 					
 			}
 			else {
-				UIFunctions.showOKDialog(res.getBody(), getActivity());
+				//UIFunctions.showOKDialog(res.getBody(), getActivity());
 				changeProgressBarVisibility(false);
 			}
 		}
@@ -447,7 +452,7 @@ public class NewLocationActivity extends Activity implements
 				
 			} else {
 				changeProgressBarVisibility(false);
-				//TODO show error to user
+				UIFunctions.showToast(getActivity(), UIFunctions.parseJsonMessage(res.getBody()));
 			}
 
 		}
@@ -470,9 +475,18 @@ public class NewLocationActivity extends Activity implements
 		protected void onPostExecute(Response res) {
 			changeProgressBarVisibility(false);
 			if (res.getStatusCode() == 200) {
+				
+				try {
+					JSONObject jsonObj = new JSONObject(res.getBody());
+					createdLocation.addImage(jsonObj.getString("id"));
+				} catch (JSONException e) {
+				}
+				
 				startShowLocationActivity(createdLocation);
+
 			} else {
-				//TODO show error to user
+				UIFunctions.showToast(getActivity(), "Location created, couldn't upload image to server.");
+				startShowLocationActivity(createdLocation);
 			}
 
 		}
