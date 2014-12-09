@@ -52,7 +52,7 @@ public class UserModel {
 			this.created = new Date();
 			
 		} catch (JSONException e) {
-			Log.e("e", e.toString());
+			Log.e("UserModel", e.toString());
 		}
 	}
 	
@@ -94,6 +94,14 @@ public class UserModel {
 
 	public void setCollections(ArrayList<CollectionModel> collections) {
 		this.collections = collections;
+	}
+	
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+	
+	public Date getCreated() {
+		return this.created;
 	}
 	
 }

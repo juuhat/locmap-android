@@ -149,6 +149,10 @@ public class LocationModel implements Parcelable {
 	public ArrayList<String> getImages() {
 		return this.images;
 	}
+	
+	public void addImage(String image) {
+		this.images.add(image);
+	}
 
 	public Date getCreated() {
 		return created;
