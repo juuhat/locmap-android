@@ -206,7 +206,7 @@ public class UIFunctions {
 	 */
 	public static void clearToken(Activity current) {
 		SharedPreferences sharedPref = current.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
-		sharedPref.edit().remove(tokenKey).commit();
+		sharedPref.edit().clear().commit();
 	}
 
 	/**
