@@ -13,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -95,6 +94,15 @@ public class ShowLocationActivity extends Activity {
 		imageLayout.addView(imgView);
 	}
 	
+	
+	/**
+	 * @return this activity
+	 */
+	private Activity getActivity() {
+		return this;
+	}
+	
+	
 	private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
 
 		@Override
@@ -106,8 +114,7 @@ public class ShowLocationActivity extends Activity {
 				InputStream in = new URL(url).openStream();
 				img = BitmapFactory.decodeStream(in);
 			} catch (Exception e) {
-				//TODO Show error message to user
-				Log.e("e", e.getMessage());
+				UIFunctions.showToast(getActivity(), "Error at downloading image");
 			}
 
 			return img;
