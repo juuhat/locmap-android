@@ -82,12 +82,6 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 	/**
 	 * Logs out user If user has lost Internet connection, doesn't allow to log
 	 * out, because access-token cannot be reset at serverside
@@ -124,28 +118,6 @@ public class MainActivity extends Activity {
 	public void btnMainSettings(View view) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-		} else if (id == R.id.action_map) {
-			// Start map activity
-			Intent intent = new Intent(this, MapActivity.class);
-			startActivity(intent);
-		} else if (id == R.id.action_locations) {
-			// Start locations
-			Intent intent = new Intent(this, ShowLocationActivity.class);
-			startActivity(intent);
-		} else if (id == R.id.action_new_location) {
-			Intent intent = new Intent(this, NewLocationActivity.class);
-			startActivity(intent);
-		} else if (id == R.id.action_login) {
-			Intent intent = new Intent(this, LogInActivity.class);
-			startActivity(intent);
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	/**
