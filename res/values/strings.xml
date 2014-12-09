@@ -10,7 +10,7 @@
     <string name="action_map">Map</string>
     <string name="action_locations">Locations</string>
     <string name="action_collections">Collections</string>
-    <string name="title_activity_show_location">ShowLocationActivity</string>
+    <string name="title_activity_show_location">Show Location</string>
 
     <!-- Problems, officer -->
 
