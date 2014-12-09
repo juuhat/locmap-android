@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
@@ -17,7 +16,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,7 +34,7 @@ public class MapActivity extends Activity implements
     private HashMap<Marker, LocationModel> markers;
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderApi locationProvider;
-    private LocationRequest locationRequest;
+    //private LocationRequest locationRequest;
     private ArrayList<LocationModel> locations;
     
 	@Override
@@ -87,6 +85,10 @@ public class MapActivity extends Activity implements
 		}
 	}
 	
+	
+	/**
+	 * Init googleApiClient with LocationServices
+	 */
 	private void initGPS() {
         googleApiClient = new GoogleApiClient.Builder(this)
         .addApi(LocationServices.API)
@@ -98,6 +100,10 @@ public class MapActivity extends Activity implements
         
 	}
 	
+	
+	/**
+	 * Init map fragment
+	 */
 	private void initMap() {
 		// find map fragment
 		myMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -109,7 +115,6 @@ public class MapActivity extends Activity implements
 		myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		
 		myMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-			
 			@Override
 			public void onInfoWindowClick(Marker marker) {
 				LocationModel loc = markers.get(marker);
