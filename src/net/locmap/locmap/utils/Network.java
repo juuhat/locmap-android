@@ -158,7 +158,6 @@ public class Network {
 
 	public static Response Put(String url, String json, String token) {
 		Response res = new Response();
-		InputStream inputstream = null;
 		
 		try {
 			HttpClient client = new DefaultHttpClient();
@@ -171,11 +170,6 @@ public class Network {
 			put.setEntity(se);
 		
 			HttpResponse response = client.execute(put);
-			
-			String body = "";
-			inputstream = response.getEntity().getContent();
-			if (inputstream != null)
-				body = convertInputStreamToString(inputstream);
 		
 			res.setHeaders(response.getAllHeaders());
 			res.setStatusCode(response.getStatusLine().getStatusCode());
