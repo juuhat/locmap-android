@@ -61,10 +61,9 @@ public class RegisterActivity extends Activity {
 		EditText password = (EditText) findViewById(R.id.editRegisterPassword);
 		EditText passwordConf = (EditText) findViewById(R.id.editRegisterPasswordConfirmation);
 		
-		/**
-		 ********  CHECK INPUT  ******** 
+
+		 //********  CHECK INPUT  ******** 
 		 
-		
 		// check that email fills necessary criteria
 		if ( !UIFunctions.isValidEmail(email.getText().toString()) ) {
 			UIFunctions.showOKDialog(getString(R.string.check_email), this);
@@ -97,10 +96,8 @@ public class RegisterActivity extends Activity {
 			return;
 		}
 		
-		
-		/**
-		 ***********   INPUT CHECKED    ***********
-	     */
+		 //***********   INPUT CHECKED    ***********
+
 		
 		
 		String[] params = {email.getText().toString() , user.getText().toString(), password.getText().toString()};
